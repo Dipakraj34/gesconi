@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gesconi — Control your cursor with your hand</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0b0d10;
+    --surface: #14171c;
+    --surface-2: #191d23;
+    --border: #262b31;
+    --text: #ededed;
+    --text-muted: #9098a3;
+    --accent: #c9ff3e;
+    --accent-dim: #9fce2b;
+    --accent-2: #6c63ff;
+    --radius: 10px;
+    --mono: 'JetBrains Mono', monospace;
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Inter', sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+    *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  a{ color: inherit; }
+  h1,h2,h3{ font-family: var(--display); margin: 0; letter-spacing: -0.01em; }
+  p{ margin: 0; }
+  .mono{ font-family: var(--mono); }
+
+  .wrap{
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  /* ---------- NAV ---------- */
+  header{
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(11,13,16,0.82);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 16px 28px;
+    max-width: 1160px; margin: 0 auto;
+  }
+  .logo{
+    display:flex; align-items:center; gap:9px;
+    font-family: var(--display); font-weight: 700; font-size: 1.15rem;
+    text-decoration:none;
+  }
+  .logo-dot{
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px 2px rgba(201,255,62,0.6);
+    flex-shrink:0;
+  }
+  .nav-links{ display:flex; gap: 28px; list-style:none; margin:0; padding:0; }
+  .nav-links a{
+    text-decoration:none; color: var(--text-muted); font-size: 0.92rem; font-weight: 500;
+    transition: color .15s ease;
+  }
+  .nav-links a:hover{ color: var(--text); }
+  .nav-cta{
+    display:inline-flex; align-items:center; gap:7px;
+    border: 1px solid var(--border); border-radius: 7px;
+    padding: 7px 13px; font-size: 0.85rem; font-weight: 500;
+    text-decoration:none; color: var(--text);
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .nav-cta:hover{ border-color: var(--accent); background: rgba(201,255,62,0.06); }
+  .nav-mobile-hide{ display:flex; }
+  @media (max-width: 720px){
+    .nav-mobile-hide{ display:none; }
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding: 72px 0 56px;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-grid{
+    display:grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items:center;
+  }
+  @media (max-width: 900px){
+    .hero-grid{ grid-template-columns: 1fr; gap: 40px; }
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family: var(--mono); font-size: 0.78rem; color: var(--accent);
+    border: 1px solid rgba(201,255,62,0.3); background: rgba(201,255,62,0.05);
+    padding: 5px 10px; border-radius: 999px; margin-bottom: 22px;
+  }
+  .hero h1{
+    font-size: clamp(2.2rem, 4.4vw, 3.4rem);
+    font-weight: 700; line-height: 1.06;
+  }
+  .hero h1 span{ color: var(--accent); }
+  .hero p.lede{
+    margin-top: 20px; font-size: 1.08rem; color: var(--text-muted); max-width: 46ch;
+  }
+  .hero-actions{ display:flex; gap: 14px; margin-top: 32px; flex-wrap: wrap; }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 0.95rem;
+    text-decoration:none; cursor:pointer; border: 1px solid transparent;
+    transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+  }
+  .btn:active{ transform: translateY(1px); }
+  .btn-primary{ background: var(--accent); color: #0b0d10; }
+  .btn-primary:hover{ box-shadow: 0 0 0 3px rgba(201,255,62,0.18); }
+  .btn-ghost{ border-color: var(--border); color: var(--text); background: transparent; }
+  .btn-ghost:hover{ border-color: var(--text-muted); }
+
+  .hero-stats{ display:flex; gap: 32px; margin-top: 40px; }
+  .hero-stats div strong{ display:block; font-family: var(--display); font-size: 1.3rem; }
+  .hero-stats div span{ font-size: 0.8rem; color: var(--text-muted); }
+
+  /* ---------- DEMO VIEWFINDER (signature element) ---------- */
+  .viewfinder{
+    position: relative;
+    background: #000;
+    border-radius: var(--radius);
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    border: 1px solid var(--border);
+    box-shadow: 0 30px 80px -30px rgba(0,0,0,0.7);
+  }
+  .viewfinder video, .viewfinder canvas{
+    position:absolute; top:0; left:0; width:100%; height:100%;
+    object-fit: cover;
+    transform: scaleX(-1); /* mirror */
+  }
+  .viewfinder video{ opacity: 0; }
+  .vf-corner{
+    position:absolute; width: 22px; height: 22px; border: 2px solid var(--accent);
+    opacity: 0.85; z-index: 5;
+  }
+  .vf-corner.tl{ top:10px; left:10px; border-right:none; border-bottom:none; }
+  .vf-corner.tr{ top:10px; right:10px; border-left:none; border-bottom:none; }
+  .vf-corner.bl{ bottom:10px; left:10px; border-right:none; border-top:none; }
+  .vf-corner.br{ bottom:10px; right:10px; border-left:none; border-top:none; }
+  .vf-hud{
+    position:absolute; top:12px; left:40px; right:40px; z-index:5;
+    display:flex; justify-content:space-between; align-items:center;
+    font-family: var(--mono); font-size: 0.68rem; color: var(--accent);
+    letter-spacing: 0.03em;
+  }
+  .vf-rec{ display:flex; align-items:center; gap:6px; }
+  .vf-rec-dot{
+    width:7px; height:7px; border-radius:50%; background:#ff4d4d;
+    animation: blink 1.4s infinite;
+  }
+  @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:0.25;} }
+  .vf-status{
+    position:absolute; bottom: 12px; left: 40px; right: 40px; z-index: 5;
+    font-family: var(--mono); font-size: 0.7rem; color: rgba(237,237,237,0.85);
+    display:flex; justify-content:space-between;
+  }
+  .vf-overlay-msg{
+    position:absolute; inset:0; z-index:10;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;
+    background: rgba(11,13,16,0.88); text-align:center; padding: 24px;
+  }
+  .vf-overlay-msg p{ color: var(--text-muted); font-size: 0.88rem; max-width: 32ch; }
+  .vf-icon{
+    width:46px; height:46px; border-radius:50%; border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center; color: var(--accent);
+  }
+  .vf-caption{
+    margin-top: 12px; display:flex; justify-content:space-between; align-items:baseline;
+    font-family: var(--mono); font-size: 0.75rem; color: var(--text-muted);
+  }
+  .vf-caption b{ color: var(--text); font-weight: 500; }
+
+  /* ---------- SECTION shell ---------- */
+  section.block{ padding: 80px 0; border-bottom: 1px solid var(--border); }
+  .section-head{ max-width: 640px; margin-bottom: 48px; }
+  .section-head .eyebrow{ margin-bottom: 16px; }
+  .section-head h2{ font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; }
+  .section-head p{ margin-top: 14px; color: var(--text-muted); font-size: 1rem; }
+
+  /* ---------- GESTURES (numbered - real mapping sequence) ---------- */
+  .gesture-list{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow:hidden; }
+  @media (max-width: 720px){ .gesture-list{ grid-template-columns: 1fr; } }
+  .gesture-item{ background: var(--surface); padding: 26px; display:flex; gap:18px; }
+  .gesture-num{ font-family: var(--mono); color: var(--accent); font-size: 0.85rem; flex-shrink:0; padding-top:2px; }
+  .gesture-body h3{ font-size: 1.02rem; font-weight: 600; margin-bottom: 6px; }
+  .gesture-body p{ color: var(--text-muted); font-size: 0.9rem; }
+  .gesture-tag{
+    display:inline-block; margin-top:10px; font-family: var(--mono); font-size: 0.72rem;
+    color: var(--accent-2); background: rgba(108,99,255,0.1); border: 1px solid rgba(108,99,255,0.25);
+    padding: 3px 8px; border-radius: 5px;
+  }
+
+  /* ---------- INSTALL / TERMINAL ---------- */
+  .terminal{
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow:hidden;
+  }
+  .terminal-bar{
+    display:flex; align-items:center; gap:8px; padding: 12px 16px;
+    border-bottom: 1px solid var(--border); background: var(--surface-2);
+  }
+  .terminal-dot{ width:10px; height:10px; border-radius:50%; }
+  .terminal-bar span{ margin-left: 10px; font-family: var(--mono); font-size: 0.78rem; color: var(--text-muted); }
+  .terminal-body{ padding: 22px 24px; }
+  .step-row{ display:flex; gap:16px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .step-row:last-child{ border-bottom:none; padding-bottom: 4px; }
+  .step-row:first-child{ padding-top: 4px; }
+  .step-index{ font-family: var(--mono); color: var(--text-muted); font-size: 0.8rem; padding-top: 3px; flex-shrink:0; width: 18px; }
+  .step-content{ flex:1; min-width:0; }
+  .step-label{ font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; }
+  .code-line{
+    display:flex; align-items:center; justify-content:space-between; gap: 12px;
+    background: #0e1013; border: 1px solid var(--border); border-radius: 7px;
+    padding: 11px 14px; font-family: var(--mono); font-size: 0.85rem;
+    overflow-x:auto;
+  }
+  .code-line code{ color: var(--accent); white-space: pre; }
+  .code-line code .dim{ color: var(--text-muted); }
+  .copy-btn{
+    flex-shrink:0; background: transparent; border: 1px solid var(--border); color: var(--text-muted);
+    font-family: var(--body); font-size: 0.72rem; padding: 5px 10px; border-radius: 5px; cursor:pointer;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  .copy-btn:hover{ color: var(--text); border-color: var(--text-muted); }
+
+  .req-note{
+    margin-top: 22px; padding: 14px 16px; border-radius: 8px;
+    border: 1px solid rgba(201,255,62,0.25); background: rgba(201,255,62,0.04);
+    font-size: 0.85rem; color: var(--text-muted);
+  }
+  .req-note b{ color: var(--text); }
+
+  /* ---------- STACK STRIP ---------- */
+  .stack-strip{ display:flex; flex-wrap:wrap; gap: 12px; margin-top: 28px; }
+  .stack-chip{
+    display:flex; align-items:center; gap:8px;
+    border: 1px solid var(--border); border-radius: 999px; padding: 8px 14px;
+    font-family: var(--mono); font-size: 0.8rem; color: var(--text-muted);
+  }
+  .stack-chip b{ color: var(--text); font-weight:500; }
+
+  /* ---------- FOOTER ---------- */
+  footer{ padding: 40px 0; }
+  .footer-row{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap: 16px;
+    color: var(--text-muted); font-size: 0.85rem;
+  }
+  footer a{ text-decoration:none; color: var(--text-muted); transition: color .15s ease; }
+  footer a:hover{ color: var(--accent); }
+
+  ::selection{ background: rgba(201,255,62,0.3); }
+
+  a:focus-visible, button:focus-visible{
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="#top" class="logo"><span class="logo-dot"></span>gesconi</a>
+    <ul class="nav-links nav-mobile-hide">
+      <li><a href="#demo">Demo</a></li>
+      <li><a href="#gestures">Gestures</a></li>
+      <li><a href="#install">Install</a></li>
+    </ul>
+    <a class="nav-cta" href="https://github.com/YOUR_USERNAME/gesconi" target="_blank" rel="noopener">
+      GitHub →
+    </a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow">● opencv · mediapipe · pyautogui</div>
+        <h1>Move your cursor.<br>With your <span>hand</span>, not your mouse.</h1>
+        <p class="lede">Gesconi tracks your hand through a webcam and translates gestures into cursor movement, clicks, drags, and scrolls — no extra hardware, just Python and a camera.</p>
+        <div class="hero-actions">
+          <a href="#demo" class="btn btn-primary">Try the live demo</a>
+          <a href="#install" class="btn btn-ghost">Install from GitHub</a>
+        </div>
+        <div class="hero-stats">
+          <div><strong>21</strong><span>hand landmarks tracked</span></div>
+          <div><strong>~30fps</strong><span>on a laptop webcam</span></div>
+          <div><strong>0</strong><span>extra hardware needed</span></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="viewfinder" id="viewfinder">
+          <video id="input_video" playsinline></video>
+          <canvas id="output_canvas"></canvas>
+          <div class="vf-corner tl"></div>
+          <div class="vf-corner tr"></div>
+          <div class="vf-corner bl"></div>
+          <div class="vf-corner br"></div>
+          <div class="vf-hud">
+            <div class="vf-rec"><span class="vf-rec-dot"></span>TRACKING</div>
+            <div id="fpsCounter">-- FPS</div>
+          </div>
+          <div class="vf-status">
+            <span id="handStatus">no hand detected</span>
+            <span id="gestureStatus">—</span>
+          </div>
+          <div class="vf-overlay-msg" id="vfOverlay">
+            <div class="vf-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M23 19v-3a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M1 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/><circle cx="8" cy="7" r="4"/></svg>
+            </div>
+            <p>This runs entirely in your browser via MediaPipe — nothing is uploaded. Enable your camera to see live hand tracking.</p>
+            <button class="btn btn-primary" id="enableCamBtn">Enable camera</button>
+          </div>
+        </div>
+        <div class="vf-caption">
+          <span>fig. 1 — <b>in-browser</b> preview of the tracking model</span>
+          <span>the desktop app also drives your OS cursor</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMO SECTION ANCHOR (same viewfinder, but give it its own landing target with more context) -->
+  <section class="block" id="demo">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">01 · live demo</div>
+        <h2>This is the same model the desktop tool runs.</h2>
+        <p>The viewfinder above uses MediaPipe Hands running directly in your browser, so you can see how the tracking behaves before installing anything. Scroll up, enable your camera, and try moving your hand — the skeleton overlay updates in real time. The installed Python version uses these same landmarks to drive your actual cursor via PyAutoGUI.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- GESTURES -->
+  <section class="block" id="gestures">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">02 · gesture map</div>
+        <h2>Five gestures, five actions.</h2>
+        <p>Each gesture is read from the relative position of your fingertips and knuckles — no calibration step required. This is the order Gesconi checks them in.</p>
+      </div>
+      <div class="gesture-list">
+        <div class="gesture-item">
+          <div class="gesture-num">01</div>
+          <div class="gesture-body">
+            <h3>Open palm, index extended</h3>
+            <p>Moves the cursor. The tip of your index finger maps directly to screen position, smoothed to reduce jitter.</p>
+            <span class="gesture-tag">move</span>
+          </div>
+        </div>
+        <div class="gesture-item">
+          <div class="gesture-num">02</div>
+          <div class="gesture-body">
+            <h3>Thumb + index pinch</h3>
+            <p>A quick pinch-and-release fires a left click. The distance between thumb and index tips is measured every frame.</p>
+            <span class="gesture-tag">left click</span>
+          </div>
+        </div>
+        <div class="gesture-item">
+          <div class="gesture-num">03</div>
+          <div class="gesture-body">
+            <h3>Thumb + middle pinch</h3>
+            <p>The same pinch gesture, one finger over, triggers a right click for context menus.</p>
+            <span class="gesture-tag">right click</span>
+          </div>
+        </div>
+        <div class="gesture-item">
+          <div class="gesture-num">04</div>
+          <div class="gesture-body">
+            <h3>Pinch and hold</h3>
+            <p>Holding the thumb-index pinch past a short threshold switches into drag mode until you release.</p>
+            <span class="gesture-tag">drag</span>
+          </div>
+        </div>
+        <div class="gesture-item">
+          <div class="gesture-num">05</div>
+          <div class="gesture-body">
+            <h3>Index + middle raised together</h3>
+            <p>Moving two fingers up or down scrolls the active window, similar to a two-finger trackpad swipe.</p>
+            <span class="gesture-tag">scroll</span>
+          </div>
+        </div>
+        <div class="gesture-item">
+          <div class="gesture-num">06</div>
+          <div class="gesture-body">
+            <h3>Closed fist</h3>
+            <p>A closed fist pauses tracking entirely — useful for repositioning your hand without moving the cursor.</p>
+            <span class="gesture-tag">pause</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTALL -->
+  <section class="block" id="install">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">03 · install</div>
+        <h2>Run it on your own machine.</h2>
+        <p>Gesconi is a Python script — clone it, install the three dependencies, and run it. A webcam is all you need.</p>
+      </div>
+
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="terminal-dot" style="background:#ff5f57"></div>
+          <div class="terminal-dot" style="background:#febc2e"></div>
+          <div class="terminal-dot" style="background:#28c840"></div>
+          <span>terminal — gesconi setup</span>
+        </div>
+        <div class="terminal-body">
+
+          <div class="step-row">
+            <div class="step-index">1</div>
+            <div class="step-content">
+              <div class="step-label">Clone the repository</div>
+              <div class="code-line">
+                <code>git clone <span class="dim">https://github.com/YOUR_USERNAME/gesconi.git</span></code>
+                <button class="copy-btn" data-copy="git clone https://github.com/YOUR_USERNAME/gesconi.git">Copy</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-row">
+            <div class="step-index">2</div>
+            <div class="step-content">
+              <div class="step-label">Move into the project and create a virtual environment</div>
+              <div class="code-line">
+                <code>cd gesconi <span class="dim">&&</span> python -m venv venv</code>
+                <button class="copy-btn" data-copy="cd gesconi && python -m venv venv">Copy</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-row">
+            <div class="step-index">3</div>
+            <div class="step-content">
+              <div class="step-label">Activate it (Windows shown — use <span class="mono">source venv/bin/activate</span> on macOS/Linux)</div>
+              <div class="code-line">
+                <code>venv\Scripts\activate</code>
+                <button class="copy-btn" data-copy="venv\Scripts\activate">Copy</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-row">
+            <div class="step-index">4</div>
+            <div class="step-content">
+              <div class="step-label">Install dependencies</div>
+              <div class="code-line">
+                <code>pip install -r requirements.txt</code>
+                <button class="copy-btn" data-copy="pip install -r requirements.txt">Copy</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-row">
+            <div class="step-index">5</div>
+            <div class="step-content">
+              <div class="step-label">Run it</div>
+              <div class="code-line">
+                <code>python gesconi.py</code>
+                <button class="copy-btn" data-copy="python gesconi.py">Copy</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="req-note">
+        <b>Before you run it:</b> Gesconi has been tested with <b>Python 3.11</b> and <b>mediapipe==0.10.14</b> — newer Python versions can hit MediaPipe compatibility issues, so the virtual environment step above matters.
+      </div>
+
+      <div class="stack-strip">
+        <div class="stack-chip"><b>OpenCV</b> — camera capture &amp; frame processing</div>
+        <div class="stack-chip"><b>MediaPipe</b> — hand landmark detection</div>
+        <div class="stack-chip"><b>PyAutoGUI</b> — cursor &amp; click control</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap footer-row">
+    <span>Built by Dipak · gesconi</span>
+    <a href="https://github.com/YOUR_USERNAME/gesconi" target="_blank" rel="noopener">View source on GitHub</a>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+<script>
+(function(){
+  const videoEl = document.getElementById('input_video');
+  const canvasEl = document.getElementById('output_canvas');
+  const ctx = canvasEl.getContext('2d');
+  const overlay = document.getElementById('vfOverlay');
+  const enableBtn = document.getElementById('enableCamBtn');
+  const handStatus = document.getElementById('handStatus');
+  const gestureStatus = document.getElementById('gestureStatus');
+  const fpsCounter = document.getElementById('fpsCounter');
+
+  let camera = null;
+  let hands = null;
+  let lastFrameTime = performance.now();
+  let fpsSmoothed = 0;
+
+  function dist(a, b){
+    return Math.hypot(a.x - b.x, a.y - b.y);
+  }
+
+  function classifyGesture(landmarks){
+    // Very lightweight heuristic classifier, just for demo purposes.
+    const thumbTip = landmarks[4];
+    const indexTip = landmarks[8];
+    const middleTip = landmarks[12];
+    const indexMcp = landmarks[5];
+    const middleMcp = landmarks[9];
+
+    const pinchIndex = dist(thumbTip, indexTip);
+    const pinchMiddle = dist(thumbTip, middleTip);
+
+    if (pinchIndex < 0.05) return 'pinch (click)';
+    if (pinchMiddle < 0.05) return 'pinch (right click)';
+
+    const indexUp = indexTip.y < indexMcp.y - 0.02;
+    const middleUp = middleTip.y < middleMcp.y - 0.02;
+
+    if (indexUp && middleUp) return 'two fingers (scroll)';
+    if (indexUp) return 'index up (move)';
+    return 'fist (paused)';
+  }
+
+  function onResults(results){
+    const now = performance.now();
+    const instantFps = 1000 / (now - lastFrameTime);
+    fpsSmoothed = fpsSmoothed ? fpsSmoothed * 0.9 + instantFps * 0.1 : instantFps;
+    lastFrameTime = now;
+    fpsCounter.textContent = Math.round(fpsSmoothed) + ' FPS';
+
+    canvasEl.width = results.image.width;
+    canvasEl.height = results.image.height;
+    ctx.save();
+    ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
+    ctx.drawImage(results.image, 0, 0, canvasEl.width, canvasEl.height);
+
+    if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0){
+      handStatus.textContent = 'hand detected';
+      for (const landmarks of results.multiHandLandmarks){
+        window.drawConnectors(ctx, landmarks, window.HAND_CONNECTIONS, { color: 'rgba(201,255,62,0.55)', lineWidth: 2 });
+        window.drawLandmarks(ctx, landmarks, { color: '#c9ff3e', fillColor: '#0b0d10', lineWidth: 1, radius: 3 });
+        gestureStatus.textContent = classifyGesture(landmarks);
+      }
+    } else {
+      handStatus.textContent = 'no hand detected';
+      gestureStatus.textContent = '—';
+    }
+    ctx.restore();
+  }
+
+  enableBtn.addEventListener('click', async function(){
+    enableBtn.disabled = true;
+    enableBtn.textContent = 'Requesting camera…';
+    try{
+      hands = new window.Hands({
+        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+      });
+      hands.setOptions({
+        maxNumHands: 1,
+        modelComplexity: 1,
+        minDetectionConfidence: 0.6,
+        minTrackingConfidence: 0.6
+      });
+      hands.onResults(onResults);
+
+      camera = new window.Camera(videoEl, {
+        onFrame: async () => { await hands.send({ image: videoEl }); },
+        width: 640,
+        height: 480
+      });
+      await camera.start();
+      overlay.style.display = 'none';
+    } catch (err){
+      enableBtn.disabled = false;
+      enableBtn.textContent = 'Enable camera';
+      handStatus.textContent = 'camera access denied';
+      console.error(err);
+    }
+  });
+
+  document.querySelectorAll('.copy-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      const text = btn.getAttribute('data-copy');
+      navigator.clipboard.writeText(text).then(function(){
+        const original = btn.textContent;
+        btn.textContent = 'Copied';
+        setTimeout(function(){ btn.textContent = original; }, 1400);
+      });
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
