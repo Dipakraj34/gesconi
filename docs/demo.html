@@ -168,71 +168,164 @@
   /* ---------- MAIN CONTENT ---------- */
   main {
     flex: 1;
-    padding: 30px 0 60px;
+    padding: 40px 0 80px;
   }
 
+  .demo-intro {
+    margin-bottom: 32px;
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--accent);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    padding: 5px 10px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+  }
+  .demo-intro h1 {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--text);
+  }
+  .demo-intro p.lede {
+    margin-top: 12px;
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    max-width: 64ch;
+  }
+
+  /* ---------- WARNING BANNER ---------- */
+  .offline-banner {
+    display: none;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: var(--text);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 32px;
+    align-items: flex-start;
+    gap: 14px;
+    box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.05);
+  }
+  .banner-icon {
+    font-size: 1.4rem;
+    line-height: 1;
+  }
+  .banner-text strong {
+    display: block;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+    color: #ef4444;
+  }
+  .banner-text p {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+  }
+  .banner-text code {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+  }
+
+  /* ---------- DEMO GRID ---------- */
   .demo-grid {
     display: grid;
-    grid-template-columns: 1fr 1.3fr;
-    gap: 32px;
-    margin-top: 20px;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 36px;
   }
-  @media (max-width: 980px) {
+  @media (max-width: 900px) {
     .demo-grid {
       grid-template-columns: 1fr;
+      gap: 28px;
     }
   }
 
-  /* ---------- LEFT SIDE: CONTROL BOARD ---------- */
-  .control-card {
+  .demo-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 24px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 18px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   }
-
-  .status-badge {
-    padding: 10px 14px;
-    border-radius: 8px;
-    background: var(--surface-2);
-    border-left: 4px solid var(--accent-2);
-    font-size: 0.85rem;
-    font-family: var(--mono);
+  .card-header {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 12px;
   }
-  .status-badge.connected {
-    border-left-color: #10b981;
+  .card-header h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
   }
-  .status-badge span b {
-    color: var(--text);
+  
+  .status-indicator {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #ef4444;
+    transition: color 0.2s ease;
+  }
+  .status-indicator.online {
+    color: #10b981;
+  }
+  .coord-badge {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 6px;
+    color: var(--accent-2);
+    font-weight: 600;
+  }
+  [data-theme="dark"] .coord-badge {
+    color: var(--accent);
   }
 
-  .viewfinder{
+  /* ---------- VIEWFINDER FEED ---------- */
+  .viewfinder-container {
     position: relative;
     background: #000;
-    border-radius: 10px;
+    border-radius: 8px;
     overflow: hidden;
     aspect-ratio: 4/3;
     border: 1px solid var(--border);
-    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.15);
   }
-  .viewfinder video, .viewfinder img, .viewfinder canvas{
-    position:absolute; top:0; left:0; width:100%; height:100%;
+  .feed-img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-  }
-  .viewfinder video {
-    transform: scaleX(-1);
-  }
-  .viewfinder img {
-    /* If stream is flipped on backend, no scaleX needed, otherwise needed */
     display: none;
   }
+  .feed-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--text-muted);
+    background: #111419;
+  }
+  .feed-placeholder p {
+    font-size: 0.85rem;
+    font-family: var(--mono);
+  }
+
   .vf-corner{
     position:absolute; width: 16px; height: 16px; border: 2px solid var(--accent);
     opacity: 0.8; z-index: 5;
@@ -241,448 +334,156 @@
   .vf-corner.tr{ top:10px; right:10px; border-left:none; border-bottom:none; }
   .vf-corner.bl{ bottom:10px; left:10px; border-right:none; border-top:none; }
   .vf-corner.br{ bottom:10px; right:10px; border-left:none; border-top:none; }
-  
-  .vf-hud{
-    position:absolute; top:12px; left:30px; right:30px; z-index:5;
-    display:flex; justify-content:space-between; align-items:center;
-    font-family: var(--mono); font-size: 0.7rem; color: var(--accent);
-    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
-  }
-  .vf-rec{ display:flex; align-items:center; gap:6px; font-weight: 600; }
-  .vf-rec-dot{
-    width:7px; height:7px; border-radius:50%; background:#ef4444;
-    animation: blink 1.4s infinite;
-  }
-  @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:0.25;} }
 
-  .vf-overlay-msg{
-    position:absolute; inset:0; z-index:10;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;
-    background: rgba(15, 23, 42, 0.95); text-align:center; padding: 24px;
-    color: #fff;
-  }
-  .vf-overlay-msg p{ color: #94a3b8; font-size: 0.85rem; max-width: 32ch; }
-  .vf-icon{
-    width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,0.15);
-    display:flex; align-items:center; justify-content:center; color: var(--accent);
-  }
-  .btn-primary-webcam {
-    background: var(--accent);
-    color: var(--accent-text);
-    padding: 10px 18px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.1s;
-  }
-  .btn-primary-webcam:active {
-    transform: scale(0.98);
-  }
-
-  .settings-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    border-top: 1px solid var(--border);
-    padding-top: 18px;
-  }
-  .settings-title {
-    font-family: var(--display);
-    font-size: 1.1rem;
-    font-weight: 600;
-  }
-  .setting-row {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .setting-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.82rem;
-    font-weight: 500;
-    color: var(--text-muted);
-  }
-  .setting-input {
-    width: 100%;
-    accent-color: var(--accent);
-  }
-
-  .toggle-control-box {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  /* ---------- GRAPH PALETTE ---------- */
+  .graph-palette {
+    position: relative;
     background: var(--surface-2);
-    padding: 12px 16px;
     border-radius: 8px;
-    margin-top: 8px;
-    border: 1px solid var(--border);
-  }
-  .toggle-info h4 {
-    margin: 0;
-    font-size: 0.88rem;
-    font-weight: 600;
-  }
-  .toggle-info p {
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    margin-top: 2px;
-  }
-  .switch {
-    position: relative;
-    display: inline-block;
-    width: 44px;
-    height: 24px;
-  }
-  .switch input { 
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: var(--border);
-    transition: .3s;
-    border-radius: 24px;
-  }
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: .3s;
-    border-radius: 50%;
-  }
-  input:checked + .slider {
-    background-color: var(--accent-2);
-  }
-  input:checked + .slider:before {
-    transform: translateX(20px);
-  }
-
-  /* ---------- RIGHT SIDE: FALSE CURSOR PAD ---------- */
-  .pad-container {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+    border: 2px dashed var(--border);
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background-image: radial-gradient(var(--border) 1.5px, transparent 1.5px);
+    background-size: 28px 28px;
   }
   
-  .pad-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .pad-header h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-  }
-  .pad-header p {
-    font-size: 0.88rem;
-    color: var(--text-muted);
-  }
-
-  .false-pad {
-    position: relative;
-    width: 100%;
-    height: 480px;
-    background: var(--surface);
-    border: 2px dashed var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    background-image: radial-gradient(var(--border) 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-
-  /* Virtual Cursor Pointer */
-  .virtual-pointer {
+  .graph-grid {
     position: absolute;
-    width: 24px;
-    height: 24px;
-    background: rgba(79, 70, 229, 0.15);
-    border: 2px solid var(--accent-2);
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    inset: 0;
     pointer-events: none;
-    z-index: 100;
-    transition: width 0.1s, height 0.1s, background-color 0.1s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 10px var(--accent-2);
   }
-  .virtual-pointer::after {
-    content: '';
-    width: 6px;
-    height: 6px;
-    background: var(--accent-2);
-    border-radius: 50%;
+  .grid-center-lines {
+    position: absolute;
+    inset: 0;
   }
-  .virtual-pointer.clicking {
+  .center-x {
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    height: 1px;
+    background: rgba(0,0,0,0.06);
+  }
+  .center-y {
+    position: absolute;
+    left: 50%; top: 0; bottom: 0;
+    width: 1px;
+    background: rgba(0,0,0,0.06);
+  }
+  [data-theme="dark"] .center-x, [data-theme="dark"] .center-y {
+    background: rgba(255,255,255,0.06);
+  }
+
+  .graph-message {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    text-align: center;
+    background: rgba(var(--surface), 0.7);
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    backdrop-filter: blur(4px);
+    z-index: 15;
+  }
+
+  /* ---------- TRACKING DOT & CROSSHAIR ---------- */
+  .tracker-dot {
+    position: absolute;
     width: 16px;
     height: 16px;
-    background: rgba(16, 185, 129, 0.4);
-    border-color: #10b981;
-    box-shadow: 0 0 12px #10b981;
-  }
-  .virtual-pointer.clicking::after {
-    background: #10b981;
-  }
-  .virtual-pointer.right-clicking {
-    width: 24px;
-    height: 24px;
-    background: rgba(239, 68, 68, 0.4);
-    border-color: #ef4444;
-    box-shadow: 0 0 12px #ef4444;
-  }
-  .virtual-pointer.right-clicking::after {
-    background: #ef4444;
-  }
-  .virtual-pointer.dragging {
-    width: 28px;
-    height: 28px;
-    background: rgba(245, 158, 11, 0.3);
-    border-color: #f59e0b;
-    box-shadow: 0 0 12px #f59e0b;
-    border-radius: 20%;
-  }
-
-  /* Pad Interactive Elements */
-  .pad-widgets {
-    position: absolute;
-    inset: 20px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1.2fr 1fr;
-    gap: 20px;
-    pointer-events: none; /* Let pointer events pass through to virtual hit tests */
-  }
-
-  .widget {
-    background: rgba(var(--surface-2), 0.3);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    pointer-events: auto; /* Enable cursor hovering on widget boundary */
-    transition: border-color 0.2s, background-color 0.2s;
-  }
-  .widget:hover, .widget.hovered {
-    border-color: var(--accent);
-    background-color: var(--surface);
-  }
-
-  .widget-title {
-    font-size: 0.82rem;
-    font-family: var(--mono);
-    color: var(--text-muted);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  /* Button Target Widget */
-  .button-sandbox {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-  }
-  .sandbox-btn {
-    padding: 12px 20px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: var(--surface-2);
-    color: var(--text);
-    font-size: 0.88rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s;
-    user-select: none;
-  }
-  .sandbox-btn.hovered {
-    border-color: var(--text);
-    background: var(--border);
-  }
-  .sandbox-btn.active {
-    background: #10b981 !important;
-    color: white !important;
-    border-color: #10b981;
-    transform: scale(0.95);
-  }
-  .sandbox-btn.right-active {
-    background: #ef4444 !important;
-    color: white !important;
-    border-color: #ef4444;
-  }
-
-  /* Drag Widget */
-  .drag-sandbox {
-    position: relative;
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-  }
-  .sandbox-drag-item {
-    width: 60px;
-    height: 60px;
-    border-radius: 10px;
     background: var(--accent-2);
-    border: 2px solid rgba(255,255,255,0.1);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    cursor: grab;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
     z-index: 10;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    transition: transform 0.1s;
-    user-select: none;
+    opacity: 0;
+    transition: opacity 0.15s ease, left 0.1s cubic-bezier(0.1, 0.8, 0.3, 1), top 0.1s cubic-bezier(0.1, 0.8, 0.3, 1);
+    box-shadow: 0 0 10px var(--accent-2);
   }
-  .sandbox-drag-item.hovered {
-    transform: scale(1.05);
+  [data-theme="dark"] .tracker-dot {
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
   }
-  .sandbox-drag-item.dragging {
-    cursor: grabbing;
-    transform: scale(1.1);
-    opacity: 0.9;
-    box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+  
+  .tracker-crosshair-x {
+    position: absolute;
+    left: -2000px; right: -2000px;
+    top: 50%; height: 1px;
+    border-top: 1px dashed var(--accent-2);
+    opacity: 0.35;
+    pointer-events: none;
   }
-  .sandbox-dropzone {
-    width: 80px;
-    height: 80px;
-    border: 2px dashed var(--border);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.72rem;
-    font-family: var(--mono);
-    color: var(--text-muted);
-    transition: all 0.2s;
+  .tracker-crosshair-y {
+    position: absolute;
+    top: -2000px; bottom: -2000px;
+    left: 50%; width: 1px;
+    border-left: 1px dashed var(--accent-2);
+    opacity: 0.35;
+    pointer-events: none;
   }
-  .sandbox-dropzone.hovered {
-    border-color: var(--accent-2);
-    background: var(--accent-2-dim);
-    color: var(--accent-2);
-  }
-  .sandbox-dropzone.snapped {
-    border-color: #10b981;
-    background: rgba(16, 185, 129, 0.1);
-    color: #10b981;
-    border-style: solid;
-  }
-
-  /* Scroll Widget */
-  .scroll-sandbox {
-    overflow-y: scroll;
-    height: 120px;
-    border: 1px solid var(--border);
-    background: var(--surface-2);
-    border-radius: 6px;
-    padding: 10px;
-    font-size: 0.8rem;
-    line-height: 1.4;
-    color: var(--text-muted);
-  }
-  .scroll-sandbox p {
-    margin-bottom: 8px;
-  }
-  .scroll-sandbox p:last-child {
-    margin-bottom: 0;
-  }
-  .scroll-sandbox.hovered {
+  [data-theme="dark"] .tracker-crosshair-x, [data-theme="dark"] .tracker-crosshair-y {
     border-color: var(--accent);
   }
 
-  /* Typing Sandbox */
-  .type-sandbox {
+  .tracker-ping {
+    position: absolute;
+    top: -12px; left: -12px;
+    width: 40px; height: 40px;
+    border: 2px solid var(--accent-2);
+    border-radius: 50%;
+    animation: pingEffect 1.5s infinite ease-out;
+    opacity: 0;
+  }
+  [data-theme="dark"] .tracker-ping {
+    border-color: var(--accent);
+  }
+
+  @keyframes pingEffect {
+    0% { transform: scale(0.3); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 0; }
+  }
+
+  .hud-stats {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    height: 100%;
-    justify-content: center;
-  }
-  .sandbox-input {
-    width: 100%;
-    padding: 10px 12px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: var(--surface-2);
-    color: var(--text);
+    justify-content: space-between;
+    align-items: center;
     font-family: var(--mono);
-    font-size: 0.9rem;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  .sandbox-input.hovered {
-    border-color: var(--text);
-  }
-  .sandbox-input:focus {
-    border-color: var(--accent-2);
-    background: var(--surface);
-  }
-  .type-instructions {
     font-size: 0.72rem;
     color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
   }
-
-  /* Context Menu Element inside pad */
-  .sandbox-context-menu {
-    position: absolute;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-    padding: 6px;
-    display: none;
-    z-index: 101;
-    min-width: 120px;
-  }
-  .context-item {
-    padding: 6px 12px;
-    font-size: 0.78rem;
+  .hand-badge {
+    font-weight: 600;
     border-radius: 4px;
-    cursor: pointer;
-    color: var(--text);
-    transition: background 0.1s;
-    user-select: none;
+    padding: 2px 8px;
+    letter-spacing: 0.02em;
+    font-size: 0.7rem;
   }
-  .context-item.hovered {
-    background: var(--surface-2);
-    color: var(--accent-2);
+  .hand-badge.detected {
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+  }
+  .hand-badge.no-hand {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
   }
 
-  /* Warning banner when mouse control is toggled */
-  .failsafe-banner {
-    display: none;
-    background: rgba(245, 158, 11, 0.1);
-    border: 1px solid #f59e0b;
-    color: #d97706;
-    padding: 12px 16px;
-    border-radius: 8px;
-    font-size: 0.82rem;
-    margin-top: 16px;
-    align-items: center;
-    gap: 10px;
+  /* ---------- FOOTER ---------- */
+  footer{ 
+    padding: 40px 0; 
+    border-top: 1px solid var(--border);
+    background: var(--surface);
   }
-  .failsafe-banner svg {
-    flex-shrink: 0;
+  .footer-row{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap: 16px;
+    color: var(--text-muted); font-size: 0.88rem;
   }
+  footer a{ text-decoration:none; color: var(--text-muted); transition: color .15s ease; }
+  footer a:hover{ color: var(--accent); }
 </style>
 </head>
 <body>
@@ -712,164 +513,77 @@
 
 <main>
   <div class="wrap">
-    
+    <div class="demo-intro">
+      <div class="eyebrow">● python backend tracking</div>
+      <h1>Live Hand Tracking Demo</h1>
+      <p class="lede">Move your hand in front of your webcam. The Python backend processes the frame, extracts landmarks, and streams real-time coordinates to this graph canvas.</p>
+    </div>
+
+    <!-- Warning banner if backend is offline -->
+    <div class="offline-banner" id="offlineBanner">
+      <div class="banner-icon">⚠️</div>
+      <div class="banner-text">
+        <strong>Python Backend Server Offline</strong>
+        <p>Could not connect to Gescon Flask server. Please run <code>python gesconi.py</code> in your project directory to start the backend tracking service.</p>
+      </div>
+    </div>
+
     <div class="demo-grid">
-      <!-- LEFT COLUMN: CONTROLS & CAMERA FEED -->
-      <div>
-        <div class="control-card">
-          <div class="status-badge" id="connStatus">
-            <span>Server: <b id="connText">Checking...</b></span>
-            <span style="font-size: 0.72rem; opacity: 0.8" id="modeDesc">Verifying backend communication channels</span>
+      <!-- Camera Feed Column -->
+      <div class="demo-card">
+        <div class="card-header">
+          <h3>Webcam Feed</h3>
+          <span class="status-indicator" id="statusIndicator">● OFFLINE</span>
+        </div>
+        <div class="viewfinder-container">
+          <img id="flaskFeed" class="feed-img" src="" alt="Live Hand Recognition Stream">
+          <div class="feed-placeholder" id="feedPlaceholder">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+              <path d="M23 19v-3a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M1 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/><circle cx="8" cy="7" r="4"/>
+            </svg>
+            <p>Waiting for webcam stream...</p>
           </div>
+          <div class="vf-corner tl"></div>
+          <div class="vf-corner tr"></div>
+          <div class="vf-corner bl"></div>
+          <div class="vf-corner br"></div>
+        </div>
+        <div class="hud-stats">
+          <span id="fpsDisplay">-- FPS</span>
+          <span id="gestureDisplay">GESTURE: --</span>
+        </div>
+      </div>
 
-          <!-- Viewfinder Window -->
-          <div class="viewfinder" id="viewfinder">
-            <!-- Flask MJPEG feed -->
-            <img id="flaskFeed" src="" alt="Webcam Processing Stream">
-            <!-- JS Fallback structures -->
-            <video id="inputVideo" playsinline></video>
-            <canvas id="outputCanvas"></canvas>
-            
-            <div class="vf-corner tl"></div>
-            <div class="vf-corner tr"></div>
-            <div class="vf-corner bl"></div>
-            <div class="vf-corner br"></div>
-            <div class="vf-hud">
-              <div class="vf-rec"><span class="vf-rec-dot"></span>LIVE TRACKING</div>
-              <div id="fpsCounter">-- FPS</div>
-            </div>
-            
-            <!-- Webcam Start Overlay (shown for JS fallback mode initially) -->
-            <div class="vf-overlay-msg" id="vfOverlay" style="display: none;">
-              <div class="vf-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M23 19v-3a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M1 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/><circle cx="8" cy="7" r="4"/></svg>
-              </div>
-              <p>Webcam is required for the live browser-side hand tracking model demonstration.</p>
-              <button class="btn-primary-webcam" id="enableCamBtn">Start Browser Cam</button>
-            </div>
+      <!-- Graph Palette Column -->
+      <div class="demo-card">
+        <div class="card-header">
+          <h3>Graph Palette</h3>
+          <span class="coord-badge" id="coordBadge">X: -- | Y: --</span>
+        </div>
+        
+        <div class="graph-palette" id="graphPalette">
+          <!-- Dot tracker -->
+          <div class="tracker-dot" id="trackerDot">
+             <div class="tracker-crosshair-x"></div>
+             <div class="tracker-crosshair-y"></div>
+             <div class="tracker-ping"></div>
           </div>
-
-          <!-- Parameters Tuning -->
-          <div class="settings-panel">
-            <div class="settings-title">Tuning Thresholds</div>
-            
-            <div class="setting-row">
-              <div class="setting-label">
-                <span>Smoothing (EMA Filter)</span>
-                <span id="smoothVal">5</span>
-              </div>
-              <input type="range" class="setting-input" id="smoothRange" min="1" max="15" value="5">
+          
+          <div class="graph-grid">
+            <div class="grid-center-lines">
+              <div class="center-x"></div>
+              <div class="center-y"></div>
             </div>
-
-            <div class="setting-row">
-              <div class="setting-label">
-                <span>Pinch Trigger Distance</span>
-                <span id="pinchVal">0.045</span>
-              </div>
-              <input type="range" class="setting-input" id="pinchRange" min="0.02" max="0.08" step="0.005" value="0.045">
-            </div>
-
-            <div class="setting-row">
-              <div class="setting-label">
-                <span>Finger Extension Ratio</span>
-                <span id="ratioVal">1.15</span>
-              </div>
-              <input type="range" class="setting-input" id="ratioRange" min="1.0" max="1.3" step="0.02" value="1.15">
-            </div>
-
-            <!-- Toggle Real Desktop Cursor control (PyAutoGUI) -->
-            <div class="toggle-control-box" id="desktopToggleBox" style="display: none;">
-              <div class="toggle-info">
-                <h4>System Cursor Driver</h4>
-                <p>Allow hand gestures to move actual OS mouse</p>
-              </div>
-              <label class="switch">
-                <input type="checkbox" id="realMouseCheckbox">
-                <span class="slider"></span>
-              </label>
+            <!-- Dynamic coordinates text in the middle when no hand -->
+            <div class="graph-message" id="graphMessage">
+              Start python server and show your hand
             </div>
           </div>
         </div>
         
-        <!-- Failsafe warnings -->
-        <div class="failsafe-banner" id="failsafeBanner">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          <div>
-            <b>PyAutoGUI Failsafe is active:</b> Push your physical cursor to any corner of the screen to immediately abort hand tracking if needed.
-          </div>
-        </div>
-      </div>
-
-      <!-- RIGHT COLUMN: FALSE CURSOR PAD SANDBOX -->
-      <div class="pad-container">
-        <div class="pad-header">
-          <div>
-            <h2>False Cursor Pad</h2>
-            <p>A sandboxed canvas area to safely test Gescon tracking.</p>
-          </div>
-          <div>
-            <span class="mono" style="font-size: 0.8rem; background: var(--surface-2); padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border);">
-              Active Gesture: <b id="activeGestureDisplay">—</b>
-            </span>
-          </div>
-        </div>
-
-        <div class="false-pad" id="demoPad">
-          <!-- Virtual Cursor -->
-          <div class="virtual-pointer" id="virtualCursor"></div>
-
-          <!-- Context Menu inside pad -->
-          <div class="sandbox-context-menu" id="sandboxContextMenu">
-            <div class="context-item" id="ctxReset">Reset Sandbox</div>
-            <div class="context-item" id="ctxColor">Random Colors</div>
-            <div class="context-item" id="ctxClose">Close Menu</div>
-          </div>
-
-          <!-- Interactive elements -->
-          <div class="pad-widgets">
-            <!-- 1. Click target button widget -->
-            <div class="widget" id="clickWidget">
-              <div class="widget-title">Button Clicks</div>
-              <div class="button-sandbox">
-                <button class="sandbox-btn" id="leftClickBtn">Click Me</button>
-                <button class="sandbox-btn" id="rightClickBtn">Right Click</button>
-              </div>
-            </div>
-
-            <!-- 2. Drag & Drop widget -->
-            <div class="widget" id="dragWidget">
-              <div class="widget-title">Drag &amp; Drop</div>
-              <div class="drag-sandbox" id="dragSandbox">
-                <div class="sandbox-drag-item" id="dragItem">📦</div>
-                <div class="sandbox-dropzone" id="dropZone">Drop Here</div>
-              </div>
-            </div>
-
-            <!-- 3. Scroll area widget -->
-            <div class="widget" id="scrollWidget">
-              <div class="widget-title">Scrolling Zone</div>
-              <div class="scroll-sandbox" id="scrollBox">
-                <p><b>Scroll gesture test window:</b> Raise index, middle, ring, and pinky fingers up to scroll this text box.</p>
-                <p>Move your hand up above the vertical center to scroll up, or down below to scroll down.</p>
-                <p>Gesconi measures the palm coordinate (middle MCP landmark) relative to the screen deadzone to determine the direction and speed of scroll steps.</p>
-                <p>OpenCV and MediaPipe enable fluid hands-free reading without physical mouse wheel rotation.</p>
-                <p>This sandbox simulates the exact system scroll commands sent via PyAutoGUI scroll functions in desktop mode.</p>
-                <p>You can customize the scroll speed and deadzone boundaries directly inside `gesconi.py` configurations.</p>
-                <p>Test scrolling all the way to the bottom to verify it behaves correctly!</p>
-              </div>
-            </div>
-
-            <!-- 4. Text Input Typing widget -->
-            <div class="widget" id="typeWidget">
-              <div class="widget-title">Key Typing (Fist triggers)</div>
-              <div class="type-sandbox">
-                <input type="text" class="sandbox-input" id="typeInput" placeholder="Pistol shape to write letters..." readonly>
-                <div class="type-instructions">
-                  Close your fist (pauses tracking), then open index to type 'a', index+middle for 'b', or index+middle+ring for 'c'.
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="hud-stats">
+          <span>COORDINATE MAPPING (0.0 to 1.0)</span>
+          <span id="handDetectedBadge" class="hand-badge no-hand">NO HAND DETECTED</span>
         </div>
       </div>
     </div>
@@ -882,11 +596,6 @@
     <a href="https://github.com/YOUR_USERNAME/gesconi" target="_blank" rel="noopener">View source on GitHub</a>
   </div>
 </footer>
-
-<!-- MediaPipe SDKs for in-browser Fallback Mode -->
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
 
 <script>
   // Theme management script
@@ -919,586 +628,123 @@
 </script>
 
 <script>
-  // Global DOM elements for demo
-  const connStatus = document.getElementById('connStatus');
-  const connText = document.getElementById('connText');
-  const modeDesc = document.getElementById('modeDesc');
+  const statusIndicator = document.getElementById('statusIndicator');
   const flaskFeed = document.getElementById('flaskFeed');
-  const inputVideo = document.getElementById('inputVideo');
-  const outputCanvas = document.getElementById('outputCanvas');
-  const vfOverlay = document.getElementById('vfOverlay');
-  const enableCamBtn = document.getElementById('enableCamBtn');
-  const fpsCounter = document.getElementById('fpsCounter');
+  const feedPlaceholder = document.getElementById('feedPlaceholder');
+  const fpsDisplay = document.getElementById('fpsDisplay');
+  const gestureDisplay = document.getElementById('gestureDisplay');
   
-  const smoothRange = document.getElementById('smoothRange');
-  const smoothVal = document.getElementById('smoothVal');
-  const pinchRange = document.getElementById('pinchRange');
-  const pinchVal = document.getElementById('pinchVal');
-  const ratioRange = document.getElementById('ratioRange');
-  const ratioVal = document.getElementById('ratioVal');
-  const desktopToggleBox = document.getElementById('desktopToggleBox');
-  const realMouseCheckbox = document.getElementById('realMouseCheckbox');
-  const failsafeBanner = document.getElementById('failsafeBanner');
-
-  const demoPad = document.getElementById('demoPad');
-  const virtualCursor = document.getElementById('virtualCursor');
-  const activeGestureDisplay = document.getElementById('activeGestureDisplay');
-
-  // Interactive targets
-  const leftClickBtn = document.getElementById('leftClickBtn');
-  const rightClickBtn = document.getElementById('rightClickBtn');
-  const dragItem = document.getElementById('dragItem');
-  const dropZone = document.getElementById('dropZone');
-  const scrollBox = document.getElementById('scrollBox');
-  const typeInput = document.getElementById('typeInput');
-  const sandboxContextMenu = document.getElementById('sandboxContextMenu');
+  const coordBadge = document.getElementById('coordBadge');
+  const trackerDot = document.getElementById('trackerDot');
+  const graphMessage = document.getElementById('graphMessage');
+  const handDetectedBadge = document.getElementById('handDetectedBadge');
+  const offlineBanner = document.getElementById('offlineBanner');
   
-  // State variables
-  let isDragging = false;
-  let dragOffset = { x: 0, y: 0 };
-  let isSnapped = false;
-  let prevRawGesture = 'idle';
+  let eventSource = null;
 
-  // 1. Initial State: Ping python backend API to determine run mode
   async function checkServerConnection() {
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 1800); // 1.8s timeout
+      const timeoutId = setTimeout(() => controller.abort(), 2000); // 2s timeout
       
       const res = await fetch('/api/settings', { signal: controller.signal });
       clearTimeout(timeoutId);
       
       if (res.ok) {
-        const settings = await res.json();
-        setupPythonMode(settings);
+        setupConnectedMode();
       } else {
-        setupJSFallbackMode();
+        setupOfflineMode();
       }
     } catch (err) {
-      setupJSFallbackMode();
+      setupOfflineMode();
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // PYTHON BACKEND RUN MODE
-  // ---------------------------------------------------------------------------
-  function setupPythonMode(settings) {
-    connStatus.classList.add('connected');
-    connText.textContent = "CONNECTED (PYTHON)";
-    modeDesc.textContent = "Webcam frame analysis and gesture extraction running on local Python engine";
+  function setupConnectedMode() {
+    offlineBanner.style.display = 'none';
+    statusIndicator.textContent = '● ACTIVE';
+    statusIndicator.className = 'status-indicator online';
     
-    // Show local OS cursor driver option
-    desktopToggleBox.style.style = "display: flex;";
-    desktopToggleBox.style.display = "flex";
-    
-    // Set UI values to match Python backend
-    smoothRange.value = settings.smoothing;
-    smoothVal.textContent = settings.smoothing;
-    pinchRange.value = settings.pinch_trigger_dist;
-    pinchVal.textContent = settings.pinch_trigger_dist;
-    ratioRange.value = settings.finger_extended_ratio;
-    ratioVal.textContent = settings.finger_extended_ratio;
-    realMouseCheckbox.checked = settings.control_real_mouse;
-    
-    if (settings.control_real_mouse) {
-      failsafeBanner.style.display = "flex";
+    // Set video stream source
+    flaskFeed.src = '/video-feed';
+    flaskFeed.style.display = 'block';
+    feedPlaceholder.style.display = 'none';
+
+    // Start coordinates stream
+    if (eventSource) {
+      eventSource.close();
     }
-
-    // Configure video stream src
-    flaskFeed.src = "/video-feed";
-    flaskFeed.style.display = "block";
     
-    // Hide JS fallback canvas/video
-    inputVideo.style.display = "none";
-    outputCanvas.style.display = "none";
-    vfOverlay.style.display = "none";
-
-    // Setup EventSource listener for tracking coordinate broadcasts
-    const source = new EventSource('/stream-data');
-    source.onmessage = function(event) {
+    eventSource = new EventSource('/stream-data');
+    eventSource.onmessage = function(event) {
       const data = JSON.parse(event.data);
-      fpsCounter.textContent = data.fps + " FPS";
-      
+      fpsDisplay.textContent = data.fps + ' FPS';
+      gestureDisplay.textContent = 'GESTURE: ' + data.gesture.toUpperCase().replace('_', ' ');
+
       if (data.hand_detected) {
-        handlePointerUpdate(data.x, data.y, data.gesture);
+        // Move tracking dot (coordinates are 0-1)
+        trackerDot.style.opacity = '1';
+        trackerDot.style.left = (data.x * 100) + '%';
+        trackerDot.style.top = (data.y * 100) + '%';
+        
+        // Update coordinate HUD
+        coordBadge.textContent = `X: ${data.x.toFixed(3)} | Y: ${data.y.toFixed(3)}`;
+        
+        // Update hand badge
+        handDetectedBadge.textContent = 'HAND DETECTED';
+        handDetectedBadge.className = 'hand-badge detected';
+        
+        // Hide overlay text inside graph palette
+        graphMessage.style.display = 'none';
       } else {
-        virtualCursor.style.opacity = '0';
-        activeGestureDisplay.textContent = '—';
+        // Hide dot
+        trackerDot.style.opacity = '0';
+        coordBadge.textContent = 'X: -- | Y: --';
+        
+        // Update hand badge
+        handDetectedBadge.textContent = 'NO HAND DETECTED';
+        handDetectedBadge.className = 'hand-badge no-hand';
+        
+        // Show message
+        graphMessage.textContent = 'Position your hand in the webcam view';
+        graphMessage.style.display = 'block';
       }
     };
-    source.onerror = function() {
-      // If server disconnects, fallback gracefully
-      source.close();
-      setupJSFallbackMode();
+
+    eventSource.onerror = function() {
+      eventSource.close();
+      eventSource = null;
+      setupOfflineMode();
     };
-
-    // Add API event listeners for settings panels
-    smoothRange.addEventListener('change', sendSettings);
-    pinchRange.addEventListener('change', sendSettings);
-    ratioRange.addEventListener('change', sendSettings);
-    
-    realMouseCheckbox.addEventListener('change', async function() {
-      try {
-        const res = await fetch('/api/toggle-control', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ control_real_mouse: realMouseCheckbox.checked })
-        });
-        const data = await res.json();
-        realMouseCheckbox.checked = data.control_real_mouse;
-        failsafeBanner.style.display = data.control_real_mouse ? "flex" : "none";
-      } catch (err) {
-        console.error("Failed to toggle system mouse control:", err);
-      }
-    });
   }
 
-  async function sendSettings() {
-    smoothVal.textContent = smoothRange.value;
-    pinchVal.textContent = pinchRange.value;
-    ratioVal.textContent = ratioRange.value;
+  function setupOfflineMode() {
+    offlineBanner.style.display = 'flex';
+    statusIndicator.textContent = '● OFFLINE';
+    statusIndicator.className = 'status-indicator';
     
-    try {
-      await fetch('/api/settings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          smoothing: parseFloat(smoothRange.value),
-          pinch_trigger_dist: parseFloat(pinchRange.value),
-          finger_extended_ratio: parseFloat(ratioRange.value)
-        })
-      });
-    } catch (err) {
-      console.error("Failed to update settings in backend:", err);
+    flaskFeed.src = '';
+    flaskFeed.style.display = 'none';
+    feedPlaceholder.style.display = 'flex';
+
+    if (eventSource) {
+      eventSource.close();
+      eventSource = null;
     }
+
+    fpsDisplay.textContent = '-- FPS';
+    gestureDisplay.textContent = 'GESTURE: --';
+    trackerDot.style.opacity = '0';
+    coordBadge.textContent = 'X: -- | Y: --';
+    
+    handDetectedBadge.textContent = 'NO HAND DETECTED';
+    handDetectedBadge.className = 'hand-badge no-hand';
+    
+    graphMessage.textContent = 'Start python server and show your hand';
+    graphMessage.style.display = 'block';
   }
 
-  // ---------------------------------------------------------------------------
-  // JS FALLBACK RUN MODE (Static serving mode via MediaPipe WebAssembly)
-  // ---------------------------------------------------------------------------
-  let camera = null;
-  let hands = null;
-  let lastFrameTime = performance.now();
-  let fpsSmoothed = 30;
-
-  function setupJSFallbackMode() {
-    connStatus.classList.remove('connected');
-    connText.textContent = "OFFLINE (JS FALLBACK)";
-    modeDesc.textContent = "Local Flask server offline. Camera processing will execute inside sandbox via MediaPipe WASM";
-    
-    // Hide desktop controls option (since we have no Python connection)
-    desktopToggleBox.style.display = "none";
-    failsafeBanner.style.display = "none";
-    
-    // Display camera request overlay
-    flaskFeed.style.display = "none";
-    inputVideo.style.display = "block";
-    outputCanvas.style.display = "block";
-    vfOverlay.style.display = "flex";
-
-    // Set slider listeners locally
-    smoothRange.addEventListener('input', () => smoothVal.textContent = smoothRange.value);
-    pinchRange.addEventListener('input', () => pinchVal.textContent = pinchRange.value);
-    ratioRange.addEventListener('input', () => ratioVal.textContent = ratioRange.value);
-  }
-
-  enableCamBtn.addEventListener('click', async function() {
-    enableCamBtn.disabled = true;
-    enableCamBtn.textContent = "Initialising MediaPipe...";
-    
-    try {
-      hands = new window.Hands({
-        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
-      });
-      hands.setOptions({
-        maxNumHands: 1,
-        modelComplexity: 1,
-        minDetectionConfidence: 0.6,
-        minTrackingConfidence: 0.6
-      });
-      hands.onResults(onResultsJS);
-
-      camera = new window.Camera(inputVideo, {
-        onFrame: async () => { await hands.send({ image: inputVideo }); },
-        width: 640,
-        height: 480
-      });
-      await camera.start();
-      vfOverlay.style.display = 'none';
-    } catch (err) {
-      console.error("Browser camera access failed:", err);
-      enableCamBtn.disabled = false;
-      enableCamBtn.textContent = "Camera Access Denied";
-    }
-  });
-
-  // Local landmark arrays & states for JS smoothing
-  let prevJSMappedX = 0.5;
-  let prevJSMappedY = 0.5;
-  let jsPinchStartTime = null;
-
-  function dist(a, b){
-    return Math.hypot(a.x - b.x, a.y - b.y);
-  }
-
-  function classifyGestureJS(landmarks) {
-    const thumbTip = landmarks[4];
-    const indexTip = landmarks[8];
-    const middleTip = landmarks[12];
-    const indexMcp = landmarks[5];
-    const middleMcp = landmarks[9];
-    const pinkyTip = landmarks[20];
-
-    const pinchTriggerDist = parseFloat(pinchRange.value);
-    const pinchIndex = dist(thumbTip, indexTip);
-    const pinchMiddle = dist(thumbTip, middleTip);
-    const pinchPinky = dist(thumbTip, pinkyTip);
-
-    // Palm landmarks for wrist ratio
-    const wrist = landmarks[0];
-    const ringTip = landmarks[16];
-    
-    // Detect extended state
-    const extendedRatio = parseFloat(ratioRange.value);
-    const indexExtended = dist(wrist, indexTip) > dist(wrist, landmarks[6]) * extendedRatio;
-    const middleExtended = dist(wrist, middleTip) > dist(wrist, landmarks[10]) * extendedRatio;
-    const ringExtended = dist(wrist, ringTip) > dist(wrist, landmarks[14]) * extendedRatio;
-    const pinkyExtended = dist(wrist, pinkyTip) > dist(wrist, landmarks[18]) * extendedRatio;
-
-    // Fist (all down) -> Pause
-    if (!indexExtended && !middleExtended && !ringExtended && !pinkyExtended) {
-      return 'pause';
-    }
-
-    // Screenshot (thumb + pinky)
-    if (pinchPinky < 0.08 && pinchIndex >= pinchTriggerDist && pinchMiddle >= pinchTriggerDist) {
-      return 'screenshot';
-    }
-
-    // Right Click
-    if (pinchMiddle < pinchTriggerDist && pinchIndex >= pinchTriggerDist) {
-      return 'right_click';
-    }
-
-    // Left Click / Drag (pinch index)
-    if (pinchIndex < pinchTriggerDist) {
-      if (!jsPinchStartTime) {
-        jsPinchStartTime = performance.now();
-      }
-      const heldTime = (performance.now() - jsPinchStartTime) / 1000;
-      if (heldTime >= 0.35) {
-        return 'drag';
-      }
-      return 'click_pending';
-    } else {
-      jsPinchStartTime = null;
-    }
-
-    // Scroll
-    if (indexExtended && middleExtended && ringExtended && pinkyExtended) {
-      return 'scroll';
-    }
-
-    // Move
-    if (indexExtended && !middleExtended && !ringExtended && !pinkyExtended) {
-      return 'move';
-    }
-
-    return 'idle';
-  }
-
-  function onResultsJS(results) {
-    const now = performance.now();
-    const diff = now - lastFrameTime;
-    lastFrameTime = now;
-    if (diff > 0) {
-      fpsSmoothed = fpsSmoothed * 0.9 + (1000 / diff) * 0.1;
-    }
-    fpsCounter.textContent = Math.round(fpsSmoothed) + ' FPS';
-
-    const ctx = outputCanvas.getContext('2d');
-    outputCanvas.width = results.image.width;
-    outputCanvas.height = results.image.height;
-    ctx.save();
-    ctx.clearRect(0, 0, outputCanvas.width, outputCanvas.height);
-    ctx.drawImage(results.image, 0, 0, outputCanvas.width, outputCanvas.height);
-
-    if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0){
-      const landmarks = results.multiHandLandmarks[0];
-      
-      // Draw landmarks on canvas
-      window.drawConnectors(ctx, landmarks, window.HAND_CONNECTIONS, { color: 'rgba(79,70,229,0.5)', lineWidth: 2 });
-      window.drawLandmarks(ctx, landmarks, { color: '#4f46e5', fillColor: '#ffffff', lineWidth: 1, radius: 3 });
-
-      const gesture = classifyGestureJS(landmarks);
-      
-      // Map coordinates with margins (replicate margins of 100 pixels on 640x480 frame)
-      const indexTip = landmarks[8];
-      
-      // indexTip.x is normalized 0-1, but mirrored, let's keep it normalized.
-      const marginRatioX = 100 / 640;
-      const marginRatioY = 100 / 480;
-      
-      let normX = (indexTip.x - marginRatioX) / (1.0 - 2 * marginRatioX);
-      let normY = (indexTip.y - marginRatioY) / (1.0 - 2 * marginRatioY);
-      
-      normX = Math.max(0, Math.min(1, normX));
-      normY = Math.max(0, Math.min(1, normY));
-
-      // Apply smoothing filter
-      const smoothingFactor = parseFloat(smoothRange.value);
-      const smoothX = prevJSMappedX + (normX - prevJSMappedX) / smoothingFactor;
-      const smoothY = prevJSMappedY + (normY - prevJSMappedY) / smoothingFactor;
-      
-      prevJSMappedX = smoothX;
-      prevJSMappedY = smoothY;
-
-      handlePointerUpdate(smoothX, smoothY, gesture);
-    } else {
-      virtualCursor.style.opacity = '0';
-      activeGestureDisplay.textContent = '—';
-    }
-    ctx.restore();
-  }
-
-  // ---------------------------------------------------------------------------
-  // INTERACTIVE SANDBOX FUNCTIONALITY
-  // ---------------------------------------------------------------------------
-  
-  function handlePointerUpdate(xRatio, yRatio, gesture) {
-    virtualCursor.style.opacity = '1';
-    activeGestureDisplay.textContent = gesture.replace('_', ' ').toUpperCase();
-
-    // Map normalized coordinates 0-1 to false-pad pixel size
-    const padRect = demoPad.getBoundingClientRect();
-    const cursorX = xRatio * padRect.width;
-    const cursorY = yRatio * padRect.height;
-
-    // Move virtual cursor element
-    virtualCursor.style.left = cursorX + 'px';
-    virtualCursor.style.top = cursorY + 'px';
-
-    // Remove state classes
-    virtualCursor.classList.remove('clicking', 'right-clicking', 'dragging');
-
-    // Edge check: close context menu if click occurs outside menu
-    if ((gesture === 'left_click' || gesture === 'click_pending') && sandboxContextMenu.style.display === 'block') {
-      const menuRect = sandboxContextMenu.getBoundingClientRect();
-      const absoluteCursorX = padRect.left + cursorX;
-      const absoluteCursorY = padRect.top + cursorY;
-      
-      if (absoluteCursorX < menuRect.left || absoluteCursorX > menuRect.right ||
-          absoluteCursorY < menuRect.top || absoluteCursorY > menuRect.bottom) {
-        sandboxContextMenu.style.display = 'none';
-      }
-    }
-
-    // Perform hit tests on widgets
-    hitTestWidgets(cursorX, cursorY, gesture);
-    
-    // Type Letter implementation (trigger on change from pause/fist to letter mode)
-    if (prevRawGesture === 'pause' && gesture.startsWith('type_')) {
-      const letter = gesture.split('_')[1];
-      typeInput.value += letter;
-      typeInput.scrollLeft = typeInput.scrollWidth; // auto scroll
-      
-      // Flash input border green
-      typeInput.style.borderColor = '#10b981';
-      setTimeout(() => typeInput.style.borderColor = '', 300);
-    }
-    prevRawGesture = gesture;
-  }
-
-  function hitTestWidgets(cx, cy, gesture) {
-    const padRect = demoPad.getBoundingClientRect();
-    
-    // Get widgets list
-    const widgets = document.querySelectorAll('.widget');
-    let hoveredWidget = null;
-
-    widgets.forEach(w => {
-      // Calculate coordinates relative to demoPad
-      const wRect = w.getBoundingClientRect();
-      const rx = wRect.left - padRect.left;
-      const ry = wRect.top - padRect.top;
-
-      if (cx >= rx && cx <= rx + wRect.width && cy >= ry && cy <= ry + wRect.height) {
-        w.classList.add('hovered');
-        hoveredWidget = w;
-      } else {
-        w.classList.remove('hovered');
-      }
-    });
-
-    // 1. Hit test Click target Button sandbox
-    const btns = [leftClickBtn, rightClickBtn];
-    btns.forEach(btn => {
-      const btnRect = btn.getBoundingClientRect();
-      const rx = btnRect.left - padRect.left;
-      const ry = btnRect.top - padRect.top;
-
-      if (cx >= rx && cx <= rx + btnRect.width && cy >= ry && cy <= ry + btnRect.height) {
-        btn.classList.add('hovered');
-        
-        // Execute Actions
-        if (gesture === 'left_click') {
-          virtualCursor.classList.add('clicking');
-          btn.classList.add('active');
-          setTimeout(() => btn.classList.remove('active'), 200);
-          
-          if (btn === leftClickBtn) {
-            btn.textContent = "Clicked! 🎉";
-            setTimeout(() => btn.textContent = "Click Me", 1200);
-          }
-        }
-        if (gesture === 'right_click') {
-          virtualCursor.classList.add('right-clicking');
-          btn.classList.add('right-active');
-          setTimeout(() => btn.classList.remove('right-active'), 200);
-          
-          if (btn === rightClickBtn) {
-            // Show Context Menu inside pad
-            sandboxContextMenu.style.display = 'block';
-            sandboxContextMenu.style.left = cx + 'px';
-            sandboxContextMenu.style.top = cy + 'px';
-          }
-        }
-      } else {
-        btn.classList.remove('hovered');
-      }
-    });
-
-    // Hit test Context Menu items
-    if (sandboxContextMenu.style.display === 'block') {
-      const items = sandboxContextMenu.querySelectorAll('.context-item');
-      items.forEach(item => {
-        const itemRect = item.getBoundingClientRect();
-        const rx = itemRect.left - padRect.left;
-        const ry = itemRect.top - padRect.top;
-
-        if (cx >= rx && cx <= rx + itemRect.width && cy >= ry && cy <= ry + itemRect.height) {
-          item.classList.add('hovered');
-          if (gesture === 'left_click') {
-            executeContextItem(item.id);
-            sandboxContextMenu.style.display = 'none';
-          }
-        } else {
-          item.classList.remove('hovered');
-        }
-      });
-    }
-
-    // 2. Drag & Drop items hit testing
-    const dragRect = dragItem.getBoundingClientRect();
-    const dropRect = dropZone.getBoundingClientRect();
-    
-    const dragX = dragRect.left - padRect.left;
-    const dragY = dragRect.top - padRect.top;
-    const dropX = dropRect.left - padRect.left;
-    const dropY = dropRect.top - padRect.top;
-
-    if (gesture === 'drag') {
-      virtualCursor.classList.add('dragging');
-      
-      // If we are already dragging, move drag item
-      if (isDragging) {
-        dragItem.style.position = 'absolute';
-        dragItem.style.left = (cx - dragOffset.x) + 'px';
-        dragItem.style.top = (cy - dragOffset.y) + 'px';
-        
-        // Check hover over dropzone
-        if (cx >= dropX && cx <= dropX + dropRect.width && cy >= dropY && cy <= dropY + dropRect.height) {
-          dropZone.classList.add('hovered');
-        } else {
-          dropZone.classList.remove('hovered');
-        }
-      } else {
-        // Check if drag starts over the item
-        if (cx >= dragX && cx <= dragX + dragRect.width && cy >= dragY && cy <= dragY + dragRect.height) {
-          isDragging = true;
-          dragItem.classList.add('dragging');
-          // Store offset from item center
-          dragOffset.x = cx - dragX;
-          dragOffset.y = cy - dragY;
-        }
-      }
-    } else {
-      // Gesture released (stop dragging)
-      if (isDragging) {
-        isDragging = false;
-        dragItem.classList.remove('dragging');
-        
-        // Snapped check
-        if (cx >= dropX && cx <= dropX + dropRect.width && cy >= dropY && cy <= dropY + dropRect.height) {
-          // Snap drag item into dropZone center
-          dragItem.style.position = 'absolute';
-          dragItem.style.left = (dropX + (dropRect.width - dragRect.width)/2) + 'px';
-          dragItem.style.top = (dropY + (dropRect.height - dragRect.height)/2) + 'px';
-          
-          dropZone.classList.add('snapped');
-          dropZone.textContent = "Snapped!";
-          isSnapped = true;
-        } else {
-          // Reset drag position back to default inline styles
-          dragItem.style.position = '';
-          dragItem.style.left = '';
-          dragItem.style.top = '';
-          dropZone.classList.remove('snapped', 'hovered');
-          dropZone.textContent = "Drop Here";
-          isSnapped = false;
-        }
-      }
-    }
-
-    // 3. Scroll widget scrolling
-    if (gesture === 'scroll') {
-      const scrollRect = scrollBox.getBoundingClientRect();
-      const rx = scrollRect.left - padRect.left;
-      const ry = scrollRect.top - padRect.top;
-
-      if (cx >= rx && cx <= rx + scrollRect.width && cy >= ry && cy <= ry + scrollRect.height) {
-        scrollBox.classList.add('hovered');
-        
-        // Determine scroll direction based on cursor vertical ratio inside widget
-        const widgetCenterY = ry + scrollRect.height / 2;
-        const deadzone = scrollRect.height * 0.12;
-        
-        if (cy < widgetCenterY - deadzone) {
-          scrollBox.scrollTop -= 6; // Scroll up
-        } else if (cy > widgetCenterY + deadzone) {
-          scrollBox.scrollTop += 6; // Scroll down
-        }
-      } else {
-        scrollBox.classList.remove('hovered');
-      }
-    }
-  }
-
-  function executeContextItem(itemId) {
-    if (itemId === 'ctxReset') {
-      typeInput.value = '';
-      dragItem.style.position = '';
-      dragItem.style.left = '';
-      dragItem.style.top = '';
-      dropZone.classList.remove('snapped', 'hovered');
-      dropZone.textContent = "Drop Here";
-      isSnapped = false;
-      scrollBox.scrollTop = 0;
-    } else if (itemId === 'ctxColor') {
-      // Pick random gradient background for pad
-      const colors = [
-        ['#e0f2fe', '#bae6fd'],
-        ['#d1fae5', '#a7f3d0'],
-        ['#fee2e2', '#fecaca'],
-        ['#ffedd5', '#fed7aa'],
-        ['#ffffff', '#f1f5f9']
-      ];
-      const randomGradient = colors[Math.floor(Math.random() * colors.length)];
-      demoPad.style.background = `linear-gradient(135deg, ${randomGradient[0]}, ${randomGradient[1]})`;
-    }
-  }
-
-  // Trigger server checks immediately
+  // Run server check
   checkServerConnection();
 </script>
 

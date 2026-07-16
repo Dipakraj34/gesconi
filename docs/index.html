@@ -209,72 +209,89 @@
   .hero-stats div strong{ display:block; font-family: var(--display); font-size: 1.4rem; color: var(--text); }
   .hero-stats div span{ font-size: 0.82rem; color: var(--text-muted); }
 
-  /* ---------- DEMO VIEWFINDER ---------- */
-  .viewfinder{
+  /* ---------- HOLOGRAPHIC HAND VECTOR MAPPING ---------- */
+  .hand-mapping-container {
     position: relative;
-    background: #000;
+    background: #0f172a;
     border-radius: var(--radius);
     overflow: hidden;
     aspect-ratio: 4/3;
     border: 1px solid var(--border);
     box-shadow: 0 20px 50px -15px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    transition: background-color .2s ease;
   }
-  .viewfinder video, .viewfinder img, .viewfinder canvas{
-    position:absolute; top:0; left:0; width:100%; height:100%;
-    object-fit: cover;
+  [data-theme="dark"] .hand-mapping-container {
+    background: #14171c;
   }
-  .viewfinder video {
-    transform: scaleX(-1);
+  .hand-svg {
+    width: 100%;
+    height: 100%;
+    max-height: 320px;
   }
-  .viewfinder img {
-    display: none;
+  .hand-svg .node {
+    fill: var(--accent);
+    stroke: #0f172a;
+    stroke-width: 1.5px;
+    transition: r 0.2s, fill 0.2s;
   }
-  .vf-corner{
-    position:absolute; width: 20px; height: 20px; border: 2px solid var(--accent);
-    opacity: 0.85; z-index: 5;
+  [data-theme="light"] .hand-svg .node {
+    stroke: #ffffff;
   }
-  .vf-corner.tl{ top:10px; left:10px; border-right:none; border-bottom:none; }
-  .vf-corner.tr{ top:10px; right:10px; border-left:none; border-bottom:none; }
-  .vf-corner.bl{ bottom:10px; left:10px; border-right:none; border-top:none; }
-  .vf-corner.br{ bottom:10px; right:10px; border-left:none; border-top:none; }
-  .vf-hud{
-    position:absolute; top:12px; left:30px; right:30px; z-index:5;
-    display:flex; justify-content:space-between; align-items:center;
-    font-family: var(--mono); font-size: 0.72rem; color: var(--accent);
-    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+  .hand-svg .tip {
+    fill: var(--accent-2);
   }
-  .vf-rec{ display:flex; align-items:center; gap:6px; font-weight: 600; }
-  .vf-rec-dot{
-    width:7px; height:7px; border-radius:50%; background:#ef4444;
+  .hand-svg .active-node {
+    fill: #10b981;
+    filter: drop-shadow(0 0 6px #10b981);
+    animation: pulseNode 2s infinite alternate;
+  }
+  .hand-svg .skeleton-connections {
+    stroke: var(--accent-2);
+    opacity: 0.5;
+  }
+  [data-theme="dark"] .hand-svg .skeleton-connections {
+    stroke: var(--accent);
+    opacity: 0.6;
+  }
+  @keyframes pulseNode {
+    0% { r: 5.5; filter: drop-shadow(0 0 2px #10b981); }
+    100% { r: 7.5; filter: drop-shadow(0 0 8px #10b981); }
+  }
+  .hand-hud {
+    position: absolute;
+    bottom: 12px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+  }
+  [data-theme="dark"] .hand-hud {
+    color: var(--accent);
+  }
+  [data-theme="light"] .hand-hud {
+    color: var(--accent-2);
+  }
+  .hand-hud-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+  }
+  .pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10b981;
     animation: blink 1.4s infinite;
   }
   @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:0.25;} }
-  
-  .vf-overlay-msg{
-    position:absolute; inset:0; z-index:10;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;
-    background: rgba(15, 23, 42, 0.95); text-align:center; padding: 24px;
-    color: #fff;
-  }
-  .vf-overlay-msg p{ color: #94a3b8; font-size: 0.85rem; max-width: 32ch; }
-  .vf-icon{
-    width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,0.15);
-    display:flex; align-items:center; justify-content:center; color: var(--accent);
-  }
-  .btn-primary-webcam {
-    background: var(--accent);
-    color: var(--accent-text);
-    padding: 10px 18px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.1s;
-  }
-  .btn-primary-webcam:active {
-    transform: scale(0.98);
-  }
 
   .vf-caption{
     margin-top: 12px; display:flex; justify-content:space-between; align-items:baseline;
@@ -462,63 +479,7 @@
     line-height: 1.5;
   }
 
-  /* ---------- BOTTOM SLIDER WIDGET ---------- */
-  .bottom-audio-bar {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #14171c;
-    border: 1px solid #262b31;
-    border-radius: 99px;
-    padding: 8px 18px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    z-index: 100;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-  }
-  .audio-icon {
-    color: #9098a3;
-    display: flex;
-    align-items: center;
-  }
-  .audio-slider {
-    width: 100px;
-    height: 4px;
-    accent-color: var(--accent);
-    background: #262b31;
-    border-radius: 2px;
-    outline: none;
-  }
-  .audio-val {
-    font-family: var(--mono);
-    font-size: 0.78rem;
-    color: #ededed;
-    min-width: 16px;
-  }
-  
-  .reflex-badge {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: #000;
-    color: #fff;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 0.7rem;
-    font-family: var(--mono);
-    z-index: 100;
-    text-decoration: none;
-    border: 1px solid #222;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-weight: 600;
-  }
-  .reflex-badge span {
-    color: #a855f7;
-  }
+
 
   /* ---------- FOOTER ---------- */
   footer{ 
@@ -578,34 +539,95 @@
         </div>
       </div>
 
-      <!-- Hero Viewfinder Mockup / Webcam -->
+      <!-- Holographic Vector Hand Mapping -->
       <div>
-        <div class="viewfinder" id="viewfinder">
-          <img id="flaskFeed" src="" alt="Live Hand Recognition Stream">
-          <video id="inputVideo" playsinline></video>
-          <canvas id="outputCanvas"></canvas>
-          
-          <div class="vf-corner tl"></div>
-          <div class="vf-corner tr"></div>
-          <div class="vf-corner bl"></div>
-          <div class="vf-corner br"></div>
-          <div class="vf-hud">
-            <div class="vf-rec"><span class="vf-rec-dot"></span>TRACKING</div>
-            <div id="fpsCounter">-- FPS</div>
-          </div>
-          
-          <!-- Webcam Request Overlay -->
-          <div class="vf-overlay-msg" id="vfOverlay" style="display: none;">
-            <div class="vf-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M23 19v-3a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M1 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/><circle cx="8" cy="7" r="4"/></svg>
-            </div>
-            <p>This runs entirely in your browser via MediaPipe WebAssembly. Enable your camera to preview local model tracking.</p>
-            <button class="btn-primary-webcam" id="enableCamBtn">Enable camera</button>
+        <div class="hand-mapping-container">
+          <svg viewBox="0 0 400 400" class="hand-svg">
+             <!-- High tech grid overlay lines -->
+             <g class="grid-lines">
+               <line x1="0" y1="100" x2="400" y2="100" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3" />
+               <line x1="0" y1="200" x2="400" y2="200" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3" />
+               <line x1="0" y1="300" x2="400" y2="300" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3" />
+               <line x1="100" y1="0" x2="100" y2="400" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3" />
+               <line x1="200" y1="0" x2="200" y2="400" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3" />
+               <line x1="300" y1="0" x2="300" y2="400" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3" />
+             </g>
+             
+             <!-- Skeletal lines mapping hand joints -->
+             <g class="skeleton-connections" stroke-width="2" stroke-linecap="round">
+                <!-- Knuckles connector -->
+                <path d="M 150 230 L 195 220 L 240 230 L 280 255" fill="none" />
+                <!-- Wrist to knuckles / thumb -->
+                <line x1="200" y1="360" x2="160" y2="330" />
+                <line x1="200" y1="360" x2="150" y2="230" />
+                <line x1="200" y1="360" x2="280" y2="255" />
+                
+                <!-- Thumb: 1 -> 2 -> 3 -> 4 -->
+                <path d="M 160 330 L 120 290 L 95 255 L 75 220" fill="none" />
+                <!-- Index: 5 -> 6 -> 7 -> 8 -->
+                <path d="M 150 230 L 135 170 L 125 130 L 115 90" fill="none" />
+                <!-- Middle: 9 -> 10 -> 11 -> 12 -->
+                <path d="M 195 220 L 195 150 L 195 105 L 195 60" fill="none" />
+                <!-- Ring: 13 -> 14 -> 15 -> 16 -->
+                <path d="M 240 230 L 245 165 L 250 120 L 255 80" fill="none" />
+                <!-- Pinky: 17 -> 18 -> 19 -> 20 -->
+                <path d="M 280 255 L 295 205 L 305 175 L 315 140" fill="none" />
+             </g>
+             
+             <!-- Glowing coordinates nodes -->
+             <g class="landmark-nodes">
+                <!-- Wrist -->
+                <circle cx="200" cy="360" r="5.5" class="node wrist active-node" />
+                
+                <!-- Thumb -->
+                <circle cx="160" cy="330" r="4.5" class="node" />
+                <circle cx="120" cy="290" r="4.5" class="node" />
+                <circle cx="95" cy="255" r="4.5" class="node" />
+                <circle cx="75" cy="220" r="6" class="node tip active-node" />
+                
+                <!-- Index -->
+                <circle cx="150" cy="230" r="4.5" class="node" />
+                <circle cx="135" cy="170" r="4.5" class="node" />
+                <circle cx="125" cy="130" r="4.5" class="node" />
+                <circle cx="115" cy="90" r="6" class="node tip active-node" />
+                
+                <!-- Middle -->
+                <circle cx="195" cy="220" r="4.5" class="node" />
+                <circle cx="195" cy="150" r="4.5" class="node" />
+                <circle cx="195" cy="105" r="4.5" class="node" />
+                <circle cx="195" cy="5.5" r="5.5" class="node tip" />
+                
+                <!-- Ring -->
+                <circle cx="240" cy="230" r="4.5" class="node" />
+                <circle cx="245" cy="165" r="4.5" class="node" />
+                <circle cx="250" cy="120" r="4.5" class="node" />
+                <circle cx="255" cy="80" r="5.5" class="node tip" />
+                
+                <!-- Pinky -->
+                <circle cx="280" cy="255" r="4.5" class="node" />
+                <circle cx="295" cy="205" r="4.5" class="node" />
+                <circle cx="305" cy="175" r="4.5" class="node" />
+                <circle cx="315" cy="140" r="5.5" class="node tip" />
+             </g>
+
+             <!-- Labels for main points -->
+             <g fill="var(--text-muted)" font-family="var(--mono)" font-size="8" opacity="0.85">
+               <text x="212" y="364">Wrist (0)</text>
+               <text x="70" y="212" text-anchor="end">Thumb Tip (4)</text>
+               <text x="110" y="80" text-anchor="middle">Index Tip (8)</text>
+               <text x="195" y="48" text-anchor="middle">Middle Tip (12)</text>
+               <text x="260" y="70">Ring Tip (16)</text>
+               <text x="325" y="144">Pinky Tip (20)</text>
+             </g>
+          </svg>
+          <div class="hand-hud">
+             <div class="hand-hud-title"><span class="pulse-dot"></span>VECTOR VECTOR MAPPED</div>
+             <div>21 JOINT COORDINATES</div>
           </div>
         </div>
         <div class="vf-caption">
-          <span>fig. 1 — <b>interactive</b> skeleton overlay of model output</span>
-          <span>desktop app drives operating system cursor</span>
+          <span>fig. 1 — <b>holographic</b> hand joint skeletal mapping representation</span>
+          <span>desktop app translates vector distances to screen inputs</span>
         </div>
       </div>
     </div>
@@ -749,24 +771,6 @@
   </div>
 </footer>
 
-<!-- Bottom Aesthetic Slider widget -->
-<div class="bottom-audio-bar">
-  <div class="audio-icon">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-  </div>
-  <input type="range" class="audio-slider" id="audioSlider" min="0" max="100" value="44">
-  <span class="audio-val" id="audioVal">44</span>
-</div>
-
-<a href="https://reflex.dev/" target="_blank" rel="noopener" class="reflex-badge">
-  Built with <span>Reflex</span>
-</a>
-
-<!-- MediaPipe SDKs for in-browser Fallback Mode -->
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
-
 <script>
   // Theme management script
   const themeToggle = document.getElementById('themeToggle');
@@ -795,130 +799,6 @@
       themeText.textContent = 'Dark';
     }
   }
-
-  // Audio volume slider mockup interaction
-  const audioSlider = document.getElementById('audioSlider');
-  const audioVal = document.getElementById('audioVal');
-  audioSlider.addEventListener('input', () => {
-    audioVal.textContent = audioSlider.value;
-  });
-</script>
-
-<script>
-  // Dual-mode Viewfinder script
-  const flaskFeed = document.getElementById('flaskFeed');
-  const inputVideo = document.getElementById('inputVideo');
-  const outputCanvas = document.getElementById('outputCanvas');
-  const vfOverlay = document.getElementById('vfOverlay');
-  const enableCamBtn = document.getElementById('enableCamBtn');
-  const fpsCounter = document.getElementById('fpsCounter');
-
-  async function checkServerConnection() {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 1200); // 1.2s timeout
-      const res = await fetch('/api/settings', { signal: controller.signal });
-      clearTimeout(timeoutId);
-
-      if (res.ok) {
-        setupPythonMode();
-      } else {
-        setupJSFallbackMode();
-      }
-    } catch (err) {
-      setupJSFallbackMode();
-    }
-  }
-
-  function setupPythonMode() {
-    flaskFeed.src = "/video-feed";
-    flaskFeed.style.display = "block";
-    
-    // Hide JS fallback elements
-    inputVideo.style.display = "none";
-    outputCanvas.style.display = "none";
-    vfOverlay.style.display = "none";
-
-    // Setup simple EventSource to pull FPS values
-    const source = new EventSource('/stream-data');
-    source.onmessage = function(event) {
-      const data = JSON.parse(event.data);
-      fpsCounter.textContent = data.fps + " FPS";
-    };
-    source.onerror = function() {
-      source.close();
-      setupJSFallbackMode();
-    };
-  }
-
-  // JS Fallback logic
-  let camera = null;
-  let hands = null;
-  let lastFrameTime = performance.now();
-  let fpsSmoothed = 30;
-
-  function setupJSFallbackMode() {
-    flaskFeed.style.display = "none";
-    inputVideo.style.display = "block";
-    outputCanvas.style.display = "block";
-    vfOverlay.style.display = "flex";
-  }
-
-  enableCamBtn.addEventListener('click', async function() {
-    enableCamBtn.disabled = true;
-    enableCamBtn.textContent = 'Starting Camera...';
-    try {
-      hands = new window.Hands({
-        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
-      });
-      hands.setOptions({
-        maxNumHands: 1,
-        modelComplexity: 1,
-        minDetectionConfidence: 0.6,
-        minTrackingConfidence: 0.6
-      });
-      hands.onResults(onResultsJS);
-
-      camera = new window.Camera(inputVideo, {
-        onFrame: async () => { await hands.send({ image: inputVideo }); },
-        width: 640,
-        height: 480
-      });
-      await camera.start();
-      vfOverlay.style.display = 'none';
-    } catch (err) {
-      console.error(err);
-      enableCamBtn.disabled = false;
-      enableCamBtn.textContent = 'Camera Access Denied';
-    }
-  });
-
-  function onResultsJS(results) {
-    const now = performance.now();
-    const diff = now - lastFrameTime;
-    lastFrameTime = now;
-    if (diff > 0) {
-      fpsSmoothed = fpsSmoothed * 0.9 + (1000 / diff) * 0.1;
-    }
-    fpsCounter.textContent = Math.round(fpsSmoothed) + ' FPS';
-
-    const ctx = outputCanvas.getContext('2d');
-    outputCanvas.width = results.image.width;
-    outputCanvas.height = results.image.height;
-    ctx.save();
-    ctx.clearRect(0, 0, outputCanvas.width, outputCanvas.height);
-    ctx.drawImage(results.image, 0, 0, outputCanvas.width, outputCanvas.height);
-
-    if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0){
-      const landmarks = results.multiHandLandmarks[0];
-      window.drawConnectors(ctx, landmarks, window.HAND_CONNECTIONS, { color: 'rgba(79, 70, 229, 0.5)', lineWidth: 2 });
-      window.drawLandmarks(ctx, landmarks, { color: '#4f46e5', fillColor: '#ffffff', lineWidth: 1, radius: 3 });
-    }
-    ctx.restore();
-  }
-
-  // Check backend server
-  checkServerConnection();
 </script>
 
 </body>
