@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gesture Dictionary — Gescon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --surface-2: #f1f5f9;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --accent: #0f766e;
+    --accent-text: #ffffff;
+    --accent-dim: #115e59;
+    --accent-2: #4f46e5;
+    --accent-2-dim: rgba(79,70,229,0.08);
+    --radius: 12px;
+    --mono: 'JetBrains Mono', monospace;
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Inter', sans-serif;
+    --grid-bg: linear-gradient(to right, #e2e8f0 1px, transparent 1px);
+  }
+
+  [data-theme="dark"] {
+    --bg: #0b0d10;
+    --surface: #14171c;
+    --surface-2: #191d23;
+    --border: #262b31;
+    --text: #ededed;
+    --text-muted: #9098a3;
+    --accent: #c9ff3e;
+    --accent-text: #0b0d10;
+    --accent-dim: #9fce2b;
+    --accent-2: #6c63ff;
+    --accent-2-dim: rgba(108,99,255,0.1);
+    --grid-bg: linear-gradient(to right, #262b31 1px, transparent 1px);
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--bg);
+    background-image: var(--grid-bg);
+    background-size: 80px 100%;
+    color: var(--text);
+    font-family: var(--body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: background-color .2s ease, color .2s ease;
+  }
+
+  a{ color: inherit; }
+  h1,h2,h3{ font-family: var(--display); margin: 0; letter-spacing: -0.01em; }
+  p{ margin: 0; }
+  .mono{ font-family: var(--mono); }
+
+  .wrap{
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 28px;
+    width: 100%;
+  }
+
+  /* ---------- NAV ---------- */
+  header{
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(var(--bg),0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    background-color: var(--surface);
+    opacity: 0.96;
+  }
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 16px 28px;
+    max-width: 1160px; margin: 0 auto;
+  }
+  .logo{
+    display:flex; align-items:center; gap:9px;
+    font-family: var(--display); font-weight: 700; font-size: 1.25rem;
+    text-decoration:none;
+    color: var(--text);
+  }
+  .logo-icon{
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .logo-icon::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background-color: var(--accent);
+    border-radius: 50%;
+  }
+  .logo-icon::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 1px;
+    background-color: var(--accent);
+  }
+  .logo-icon-v {
+    position: absolute;
+    width: 1px;
+    height: 24px;
+    background-color: var(--accent);
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .nav-links{ display:flex; gap: 28px; list-style:none; margin:0; padding:0; align-items: center; }
+  .nav-links a{
+    text-decoration:none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500;
+    transition: color .15s ease;
+  }
+  .nav-links a:hover, .nav-links a.active{ color: var(--text); }
+  .nav-cta{
+    display:inline-flex; align-items:center; gap:7px;
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 14px; font-size: 0.88rem; font-weight: 500;
+    text-decoration:none; color: var(--text);
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .nav-cta:hover{ border-color: var(--accent); background: var(--surface-2); }
+  
+  .theme-toggle {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    transition: background-color 0.15s;
+  }
+  .theme-toggle:hover {
+    background: var(--border);
+  }
+
+  @media (max-width: 760px){
+    .nav-mobile-hide{ display:none; }
+  }
+
+  /* ---------- MAIN CONTENT ---------- */
+  main {
+    flex: 1;
+    padding: 40px 0 80px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-bottom: 28px;
+    transition: color 0.15s;
+  }
+  .back-link:hover {
+    color: var(--accent);
+  }
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family: var(--mono); font-size: 0.78rem; color: var(--accent);
+    border: 1px solid var(--border); background: var(--surface);
+    padding: 5px 10px; border-radius: 999px; margin-bottom: 16px;
+  }
+
+  .section-head {
+    max-width: 680px;
+    margin-bottom: 48px;
+  }
+  .section-head h1 {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 700;
+    color: var(--text);
+  }
+  .section-head p {
+    margin-top: 14px;
+    color: var(--text-muted);
+    font-size: 1.05rem;
+  }
+
+  /* ---------- GESTURE DICTIONARY GRID ---------- */
+  .gesture-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+    margin-top: 24px;
+  }
+
+  .gesture-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 240px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  }
+  .gesture-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  .gesture-emoji {
+    font-size: 1.8rem;
+    background: var(--surface-2);
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .gesture-index {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .gesture-info h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .gesture-info p {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.45;
+  }
+
+  .gesture-badge {
+    margin-top: 20px;
+    display: inline-flex;
+    align-self: flex-start;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--accent-2);
+    background: var(--accent-2-dim);
+    border: 1px solid rgba(108, 99, 255, 0.15);
+    padding: 4px 10px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{ 
+    padding: 40px 0; 
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    margin-top: auto;
+  }
+  .footer-row{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap: 16px;
+    color: var(--text-muted); font-size: 0.88rem;
+  }
+  footer a{ text-decoration:none; color: var(--text-muted); transition: color .15s ease; }
+  footer a:hover{ color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="index.html" class="logo">
+      <div class="logo-icon"><div class="logo-icon-v"></div></div>
+      Gescon
+    </a>
+    <ul class="nav-links nav-mobile-hide">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="gestures.html" class="active">Gestures</a></li>
+      <li><a href="demo.html">Live Demo</a></li>
+      <li><a href="install.html">Install</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="theme-toggle" id="themeToggle">
+        <span id="themeIcon">🌙</span> <span id="themeText">Dark</span>
+      </button>
+      <a class="nav-cta nav-mobile-hide" href="https://github.com/YOUR_USERNAME/gesconi" target="_blank" rel="noopener">
+        GitHub →
+      </a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="wrap">
+    <a href="index.html" class="back-link">← Back to Homepage</a>
+    
+    <div class="section-head">
+      <div class="eyebrow">+ GESTURE DICTIONARY</div>
+      <h1>One hand, eight controls.</h1>
+      <p>Each landmark relationship — the distance and position between fingertips — is translated into a distinct system-level action. Customize settings inside config files.</p>
+    </div>
+
+    <div class="gesture-grid">
+      <!-- 01 Point -->
+      <div class="gesture-card">
+        <div class="card-top">
+          <div class="gesture-emoji">👆</div>
+          <div class="gesture-index">01</div>
+        </div>
+        <div class="gesture-info">
+          <h3>Point</h3>
+          <p>Index finger extended, others curled. Drives smooth, responsive cursor movement mapped directly to fingertip positions.</p>
+        </div>
+        <div class="gesture-badge">→ MOVE CURSOR</div>
+      </div>
+
+      <!-- 02 Single Pinch -->
+      <div class="gesture-card">
+        <div class="card-top">
+          <div class="gesture-emoji">🤏</div>
+          <div class="gesture-index">02</div>
+        </div>
+        <div class="gesture-info">
+          <h3>Single Pinch</h3>
+          <p>Thumb and index fingertip pinch together quickly. Simulates a standard single left click event on release.</p>
+        </div>
+        <div class="gesture-badge">→ LEFT CLICK</div>
+      </div>
+
+      <!-- 03 Double Pinch -->
+      <div class="gesture-card">
+        <div class="card-top">
+          <div class="gesture-emoji">⚡</div>
+          <div class="gesture-index">03</div>
+        </div>
+        <div class="gesture-info">
+          <h3>Double Pinch</h3>
+          <p>Two quick thumb-and-index fingertip pinches within 0.4 seconds triggers a double click action.</p>
+        </div>
+        <div class="gesture-badge">→ DOUBLE CLICK</div>
+      </div>
+
+      <!-- 04 Right Click -->
+      <div class="gesture-card">
+        <div class="card-top">
+          <div class="gesture-emoji">👉</div>
+          <div class="gesture-index">04</div>
+        </div>
+        <div class="gesture-info">
+          <h3>Right Click</h3>
+          <p>Pinch thumb and middle finger together. Simulates a standard right click for triggers like context menus.</p>
+        </div>
+        <div class="gesture-badge">→ RIGHT CLICK</div>
+      </div>
+
+      <!-- 05 Drag & Drop -->
+      <div class="gesture-card">
+        <div class="card-top">
+          <div class="gesture-emoji">🎯</div>
+          <div class="gesture-index">05</div>
+        </div>
+        <div class="gesture-info">
+          <h3>Drag & Drop</h3>
+          <p>Pinch thumb and index and hold for 0.35s. Keeps the left mouse button held down, dragging items as your hand moves.</p>
+        </div>
+        <div class="gesture-badge">→ DRAG & DROP</div>
+      </div>
+
+      <!-- 06 Scroll Mode -->
+      <div class="gesture-card">
+        <div class="card-top">
+          <div class="gesture-emoji">↕️</div>
+          <div class="gesture-index">06</div>
+        </div>
+        <div class="gesture-info">
+          <h3>Scroll Mode</h3>
+          <p>Hold index, middle, ring, and pinky fingers up. Moving your palm up/down scrolls the active window relative to the center.</p>
+        </div>
+        <div class="gesture-badge">→ SCROLL WINDOW</div>
+      </div>
+
+      <!-- 07 Screenshot -->
+      <div class="gesture-card">
+        <div class="card-top">
+          <div class="gesture-emoji">📷</div>
+          <div class="gesture-index">07</div>
+        </div>
+        <div class="gesture-info">
+          <h3>Screenshot</h3>
+          <p>Pinch thumb and pinky finger together. Automatically captures a screenshot of your screen and saves it locally.</p>
+        </div>
+        <div class="gesture-badge">→ SCREENSHOT</div>
+      </div>
+
+      <!-- 08 Type Letter -->
+      <div class="gesture-card">
+        <div class="card-top">
+          <div class="gesture-emoji">⌨️</div>
+          <div class="gesture-index">08</div>
+        </div>
+        <div class="gesture-info">
+          <h3>Type Letter</h3>
+          <p>Make a closed fist and release. Releasing index types 'a', index+middle types 'b', and index+middle+ring types 'c'.</p>
+        </div>
+        <div class="gesture-badge">→ TYPE KEY</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap footer-row">
+    <span>Built by Dipak · gesconi</span>
+    <a href="https://github.com/YOUR_USERNAME/gesconi" target="_blank" rel="noopener">View source on GitHub</a>
+  </div>
+</footer>
+
+<script>
+  // Theme management script
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = document.getElementById('themeIcon');
+  const themeText = document.getElementById('themeText');
+  const htmlEl = document.documentElement;
+
+  // Load theme from localStorage
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  htmlEl.setAttribute('data-theme', savedTheme);
+  updateToggleButton(savedTheme);
+
+  themeToggle.addEventListener('click', () => {
+    const currentTheme = htmlEl.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    htmlEl.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateToggleButton(newTheme);
+  });
+
+  function updateToggleButton(theme) {
+    if (theme === 'dark') {
+      themeIcon.textContent = '☀️';
+      themeText.textContent = 'Light';
+    } else {
+      themeIcon.textContent = '🌙';
+      themeText.textContent = 'Dark';
+    }
+  }
+</script>
+
+</body>
+</html>

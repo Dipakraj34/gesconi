@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Developer Guide — Gescon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --surface-2: #f1f5f9;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --accent: #0f766e;
+    --accent-text: #ffffff;
+    --accent-dim: #115e59;
+    --accent-2: #4f46e5;
+    --accent-2-dim: rgba(79,70,229,0.08);
+    --radius: 12px;
+    --mono: 'JetBrains Mono', monospace;
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Inter', sans-serif;
+    --grid-bg: linear-gradient(to right, #e2e8f0 1px, transparent 1px);
+    --terminal-bg: #0e1013;
+  }
+
+  [data-theme="dark"] {
+    --bg: #0b0d10;
+    --surface: #14171c;
+    --surface-2: #191d23;
+    --border: #262b31;
+    --text: #ededed;
+    --text-muted: #9098a3;
+    --accent: #c9ff3e;
+    --accent-text: #0b0d10;
+    --accent-dim: #9fce2b;
+    --accent-2: #6c63ff;
+    --accent-2-dim: rgba(108,99,255,0.1);
+    --grid-bg: linear-gradient(to right, #262b31 1px, transparent 1px);
+    --terminal-bg: #0e1013;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--bg);
+    background-image: var(--grid-bg);
+    background-size: 80px 100%;
+    color: var(--text);
+    font-family: var(--body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: background-color .2s ease, color .2s ease;
+  }
+
+  a{ color: inherit; }
+  h1,h2,h3{ font-family: var(--display); margin: 0; letter-spacing: -0.01em; }
+  p{ margin: 0; }
+  .mono{ font-family: var(--mono); }
+
+  .wrap{
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 28px;
+    width: 100%;
+  }
+
+  /* ---------- NAV ---------- */
+  header{
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(var(--bg),0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    background-color: var(--surface);
+    opacity: 0.96;
+  }
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 16px 28px;
+    max-width: 1160px; margin: 0 auto;
+  }
+  .logo{
+    display:flex; align-items:center; gap:9px;
+    font-family: var(--display); font-weight: 700; font-size: 1.25rem;
+    text-decoration:none;
+    color: var(--text);
+  }
+  .logo-icon{
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .logo-icon::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background-color: var(--accent);
+    border-radius: 50%;
+  }
+  .logo-icon::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 1px;
+    background-color: var(--accent);
+  }
+  .logo-icon-v {
+    position: absolute;
+    width: 1px;
+    height: 24px;
+    background-color: var(--accent);
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .nav-links{ display:flex; gap: 28px; list-style:none; margin:0; padding:0; align-items: center; }
+  .nav-links a{
+    text-decoration:none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500;
+    transition: color .15s ease;
+  }
+  .nav-links a:hover, .nav-links a.active{ color: var(--text); }
+  .nav-cta{
+    display:inline-flex; align-items:center; gap:7px;
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 14px; font-size: 0.88rem; font-weight: 500;
+    text-decoration:none; color: var(--text);
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .nav-cta:hover{ border-color: var(--accent); background: var(--surface-2); }
+  
+  .theme-toggle {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    transition: background-color 0.15s;
+  }
+  .theme-toggle:hover {
+    background: var(--border);
+  }
+
+  @media (max-width: 760px){
+    .nav-mobile-hide{ display:none; }
+  }
+
+  /* ---------- MAIN CONTENT ---------- */
+  main {
+    flex: 1;
+    padding: 40px 0 80px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-bottom: 28px;
+    transition: color 0.15s;
+  }
+  .back-link:hover {
+    color: var(--accent);
+  }
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family: var(--mono); font-size: 0.78rem; color: var(--accent);
+    border: 1px solid var(--border); background: var(--surface);
+    padding: 5px 10px; border-radius: 999px; margin-bottom: 16px;
+  }
+
+  .section-head {
+    max-width: 680px;
+    margin-bottom: 48px;
+  }
+  .section-head h1 {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 700;
+    color: var(--text);
+  }
+  .section-head p {
+    margin-top: 14px;
+    color: var(--text-muted);
+    font-size: 1.05rem;
+  }
+
+  /* ---------- INSTALL / TERMINAL ---------- */
+  .terminal{
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow:hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+  .terminal-bar{
+    display:flex; align-items:center; gap:8px; padding: 12px 16px;
+    border-bottom: 1px solid var(--border); background: var(--surface-2);
+  }
+  .terminal-dot{ width:10px; height:10px; border-radius:50%; }
+  .terminal-bar span{ margin-left: 10px; font-family: var(--mono); font-size: 0.78rem; color: var(--text-muted); }
+  .terminal-body{ padding: 22px 24px; background: var(--surface); }
+  .step-row{ display:flex; gap:16px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .step-row:last-child{ border-bottom:none; padding-bottom: 4px; }
+  .step-row:first-child{ padding-top: 4px; }
+  .step-index{ font-family: var(--mono); color: var(--text-muted); font-size: 0.8rem; padding-top: 3px; flex-shrink:0; width: 18px; }
+  .step-content{ flex:1; min-width:0; }
+  .step-label{ font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; }
+  .code-line{
+    display:flex; align-items:center; justify-content:space-between; gap: 12px;
+    background: var(--terminal-bg); border: 1px solid var(--border); border-radius: 7px;
+    padding: 11px 14px; font-family: var(--mono); font-size: 0.85rem;
+    overflow-x:auto;
+  }
+  .code-line code{ color: #c9ff3e; white-space: pre; }
+  .code-line code .dim{ color: #64748b; }
+  .copy-btn{
+    flex-shrink:0; background: transparent; border: 1px solid #262b31; color: #9098a3;
+    font-family: var(--body); font-size: 0.72rem; padding: 5px 10px; border-radius: 5px; cursor:pointer;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  .copy-btn:hover{ color: #ededed; border-color: #9098a3; }
+
+  .req-note{
+    margin-top: 22px; padding: 14px 16px; border-radius: 8px;
+    border: 1px solid rgba(108, 99, 255, 0.25); background: var(--accent-2-dim);
+    font-size: 0.85rem; color: var(--text-muted);
+  }
+  .req-note b{ color: var(--text); }
+
+  .stack-strip{ display:flex; flex-wrap:wrap; gap: 12px; margin-top: 28px; }
+  .stack-chip{
+    display:flex; align-items:center; gap:8px;
+    border: 1px solid var(--border); border-radius: 999px; padding: 8px 14px;
+    font-family: var(--mono); font-size: 0.8rem; color: var(--text-muted);
+    background: var(--surface);
+  }
+  .stack-chip b{ color: var(--text); font-weight:500; }
+
+  /* ---------- SYSTEM BENEFITS ---------- */
+  .benefits-section {
+    margin-top: 80px;
+    padding-top: 60px;
+    border-top: 1px solid var(--border);
+  }
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+    margin-top: 36px;
+  }
+  .benefit-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+  .benefit-icon {
+    font-size: 1.8rem;
+    background: var(--surface-2);
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .benefit-card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  .benefit-card p {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{ 
+    padding: 40px 0; 
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    margin-top: auto;
+  }
+  .footer-row{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap: 16px;
+    color: var(--text-muted); font-size: 0.88rem;
+  }
+  footer a{ text-decoration:none; color: var(--text-muted); transition: color .15s ease; }
+  footer a:hover{ color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="index.html" class="logo">
+      <div class="logo-icon"><div class="logo-icon-v"></div></div>
+      Gescon
+    </a>
+    <ul class="nav-links nav-mobile-hide">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="gestures.html">Gestures</a></li>
+      <li><a href="demo.html">Live Demo</a></li>
+      <li><a href="install.html" class="active">Install</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="theme-toggle" id="themeToggle">
+        <span id="themeIcon">🌙</span> <span id="themeText">Dark</span>
+      </button>
+      <a class="nav-cta nav-mobile-hide" href="https://github.com/YOUR_USERNAME/gesconi" target="_blank" rel="noopener">
+        GitHub →
+      </a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="wrap">
+    <a href="index.html" class="back-link">← Back to Homepage</a>
+    
+    <div class="section-head">
+      <div class="eyebrow">+ INSTALL</div>
+      <h1>Run it on your own machine.</h1>
+      <p>Gesconi is a Python script — clone it, install the dependencies, and run it. A webcam is all you need.</p>
+    </div>
+
+    <!-- TERMINAL STEPS -->
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="terminal-dot" style="background:#ff5f57"></div>
+        <div class="terminal-dot" style="background:#febc2e"></div>
+        <div class="terminal-dot" style="background:#28c840"></div>
+        <span>terminal — gesconi setup</span>
+      </div>
+      <div class="terminal-body">
+
+        <div class="step-row">
+          <div class="step-index">1</div>
+          <div class="step-content">
+            <div class="step-label">Clone the repository</div>
+            <div class="code-line">
+              <code>git clone <span class="dim">https://github.com/YOUR_USERNAME/gesconi.git</span></code>
+              <button class="copy-btn" data-copy="git clone https://github.com/YOUR_USERNAME/gesconi.git">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-row">
+          <div class="step-index">2</div>
+          <div class="step-content">
+            <div class="step-label">Move into the project directory and create a virtual environment</div>
+            <div class="code-line">
+              <code>cd gesconi <span class="dim">&&</span> python -m venv venv</code>
+              <button class="copy-btn" data-copy="cd gesconi && python -m venv venv">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-row">
+          <div class="step-index">3</div>
+          <div class="step-content">
+            <div class="step-label">Activate virtual environment (Windows shown — use <span class="mono">source venv/bin/activate</span> on macOS/Linux)</div>
+            <div class="code-line">
+              <code>venv\Scripts\activate</code>
+              <button class="copy-btn" data-copy="venv\Scripts\activate">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-row">
+          <div class="step-index">4</div>
+          <div class="step-content">
+            <div class="step-label">Install packages dependencies</div>
+            <div class="code-line">
+              <code>pip install -r requirements.txt</code>
+              <button class="copy-btn" data-copy="pip install -r requirements.txt">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-row">
+          <div class="step-index">5</div>
+          <div class="step-content">
+            <div class="step-label">Run the Web App or Desktop tool</div>
+            <div class="code-line">
+              <code>python gesconi.py <span class="dim"># Web Dashboard</span><br>python gesconi.py --desktop <span class="dim"># Original Desktop Tool</span></code>
+              <button class="copy-btn" data-copy="python gesconi.py">Copy</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="req-note">
+      <b>Python Requirements Note:</b> Gesconi has been tested with <b>Python 3.11</b> and <b>mediapipe==0.10.14</b> — newer Python versions can hit MediaPipe compiler compatibility issues, so the virtual environment step above matters.
+    </div>
+
+    <div class="stack-strip">
+      <div class="stack-chip"><b>OpenCV</b> — camera frame capturing</div>
+      <div class="stack-chip"><b>MediaPipe</b> — hand landmarks processing</div>
+      <div class="stack-chip"><b>PyAutoGUI</b> — system cursor triggers</div>
+      <div class="stack-chip"><b>Flask</b> — local web dashboard engine</div>
+    </div>
+
+    <!-- SYSTEM BENEFITS -->
+    <div class="benefits-section">
+      <div class="eyebrow">+ SYSTEM BENEFITS</div>
+      <h2>Designed for speed &amp; accessibility.</h2>
+      <p style="color: var(--text-muted); margin-top: 8px;">Gesconi redefines desktop mouse interaction without the need for expensive or bulky tracking gear.</p>
+      
+      <div class="benefits-grid">
+        <!-- Benefit 1 -->
+        <div class="benefit-card">
+          <div class="benefit-icon">♿</div>
+          <h3>Accessibility</h3>
+          <p>Provides an ergonomic, hands-free computer control option for users with physical mobility constraints.</p>
+        </div>
+        <!-- Benefit 2 -->
+        <div class="benefit-card">
+          <div class="benefit-icon">⚡</div>
+          <h3>Ultra Low Latency</h3>
+          <p>MediaPipe compiles optimized WebAssembly and C++ threads to track hand joint movements in milliseconds.</p>
+        </div>
+        <!-- Benefit 3 -->
+        <div class="benefit-card">
+          <div class="benefit-icon">⚙️</div>
+          <h3>Customizable</h3>
+          <p>Easily adjust threshold limits, map custom fingers configurations, or assign new hotkeys inside local config files.</p>
+        </div>
+        <!-- Benefit 4 -->
+        <div class="benefit-card">
+          <div class="benefit-icon">🎥</div>
+          <h3>Zero Extras</h3>
+          <p>Works on any standard computer webcam — no specialized hardware, infrared cameras, or ring markers required.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap footer-row">
+    <span>Built by Dipak · gesconi</span>
+    <a href="https://github.com/YOUR_USERNAME/gesconi" target="_blank" rel="noopener">View source on GitHub</a>
+  </div>
+</footer>
+
+<script>
+  // Theme management script
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = document.getElementById('themeIcon');
+  const themeText = document.getElementById('themeText');
+  const htmlEl = document.documentElement;
+
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  htmlEl.setAttribute('data-theme', savedTheme);
+  updateToggleButton(savedTheme);
+
+  themeToggle.addEventListener('click', () => {
+    const currentTheme = htmlEl.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    htmlEl.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateToggleButton(newTheme);
+  });
+
+  function updateToggleButton(theme) {
+    if (theme === 'dark') {
+      themeIcon.textContent = '☀️';
+      themeText.textContent = 'Light';
+    } else {
+      themeIcon.textContent = '🌙';
+      themeText.textContent = 'Dark';
+    }
+  }
+
+  // Copy buttons logic
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const textToCopy = btn.getAttribute('data-copy');
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalText = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.style.borderColor = '#10b981';
+        btn.style.color = '#10b981';
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.style.borderColor = '';
+          btn.style.color = '';
+        }, 1500);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

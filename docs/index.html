@@ -1,14 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gesconi — Control your cursor with your hand</title>
+<title>Gescon — Control your cursor with your hand</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{
+  :root {
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --surface-2: #f1f5f9;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --accent: #0f766e;
+    --accent-text: #ffffff;
+    --accent-dim: #115e59;
+    --accent-2: #4f46e5;
+    --accent-2-dim: rgba(79,70,229,0.08);
+    --radius: 12px;
+    --mono: 'JetBrains Mono', monospace;
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Inter', sans-serif;
+    --grid-bg: linear-gradient(to right, #e2e8f0 1px, transparent 1px);
+  }
+
+  [data-theme="dark"] {
     --bg: #0b0d10;
     --surface: #14171c;
     --surface-2: #191d23;
@@ -16,12 +35,11 @@
     --text: #ededed;
     --text-muted: #9098a3;
     --accent: #c9ff3e;
+    --accent-text: #0b0d10;
     --accent-dim: #9fce2b;
     --accent-2: #6c63ff;
-    --radius: 10px;
-    --mono: 'JetBrains Mono', monospace;
-    --display: 'Space Grotesk', sans-serif;
-    --body: 'Inter', sans-serif;
+    --accent-2-dim: rgba(108,99,255,0.1);
+    --grid-bg: linear-gradient(to right, #262b31 1px, transparent 1px);
   }
 
   *{ box-sizing: border-box; }
@@ -29,14 +47,13 @@
   body{
     margin:0;
     background: var(--bg);
+    background-image: var(--grid-bg);
+    background-size: 80px 100%;
     color: var(--text);
     font-family: var(--body);
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;
-  }
-  @media (prefers-reduced-motion: reduce){
-    html{ scroll-behavior: auto; }
-    *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    transition: background-color .2s ease, color .2s ease;
   }
 
   a{ color: inherit; }
@@ -53,9 +70,11 @@
   /* ---------- NAV ---------- */
   header{
     position: sticky; top: 0; z-index: 50;
-    background: rgba(11,13,16,0.82);
-    backdrop-filter: blur(10px);
+    background: rgba(var(--bg),0.85);
+    backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
+    background-color: var(--surface);
+    opacity: 0.96;
   }
   nav{
     display:flex; align-items:center; justify-content:space-between;
@@ -64,41 +83,91 @@
   }
   .logo{
     display:flex; align-items:center; gap:9px;
-    font-family: var(--display); font-weight: 700; font-size: 1.15rem;
+    font-family: var(--display); font-weight: 700; font-size: 1.25rem;
     text-decoration:none;
+    color: var(--text);
   }
-  .logo-dot{
-    width: 9px; height: 9px; border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 10px 2px rgba(201,255,62,0.6);
-    flex-shrink:0;
+  .logo-icon{
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
   }
-  .nav-links{ display:flex; gap: 28px; list-style:none; margin:0; padding:0; }
+  .logo-icon::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background-color: var(--accent);
+    border-radius: 50%;
+  }
+  .logo-icon::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 1px;
+    background-color: var(--accent);
+  }
+  .logo-icon-v {
+    position: absolute;
+    width: 1px;
+    height: 24px;
+    background-color: var(--accent);
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .nav-links{ display:flex; gap: 28px; list-style:none; margin:0; padding:0; align-items: center; }
   .nav-links a{
-    text-decoration:none; color: var(--text-muted); font-size: 0.92rem; font-weight: 500;
+    text-decoration:none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500;
     transition: color .15s ease;
   }
-  .nav-links a:hover{ color: var(--text); }
+  .nav-links a:hover, .nav-links a.active{ color: var(--text); }
   .nav-cta{
     display:inline-flex; align-items:center; gap:7px;
-    border: 1px solid var(--border); border-radius: 7px;
-    padding: 7px 13px; font-size: 0.85rem; font-weight: 500;
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 14px; font-size: 0.88rem; font-weight: 500;
     text-decoration:none; color: var(--text);
     transition: border-color .15s ease, background .15s ease;
   }
-  .nav-cta:hover{ border-color: var(--accent); background: rgba(201,255,62,0.06); }
-  .nav-mobile-hide{ display:flex; }
-  @media (max-width: 720px){
+  .nav-cta:hover{ border-color: var(--accent); background: var(--surface-2); }
+  
+  .theme-toggle {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    transition: background-color 0.15s;
+  }
+  .theme-toggle:hover {
+    background: var(--border);
+  }
+
+  @media (max-width: 760px){
     .nav-mobile-hide{ display:none; }
   }
 
   /* ---------- HERO ---------- */
   .hero{
-    padding: 72px 0 56px;
+    padding: 80px 0 64px;
     border-bottom: 1px solid var(--border);
   }
   .hero-grid{
-    display:grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items:center;
+    display:grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items:center;
   }
   @media (max-width: 900px){
     .hero-grid{ grid-template-columns: 1fr; gap: 40px; }
@@ -106,35 +175,41 @@
   .eyebrow{
     display:inline-flex; align-items:center; gap:8px;
     font-family: var(--mono); font-size: 0.78rem; color: var(--accent);
-    border: 1px solid rgba(201,255,62,0.3); background: rgba(201,255,62,0.05);
+    border: 1px solid var(--border); background: var(--surface);
     padding: 5px 10px; border-radius: 999px; margin-bottom: 22px;
   }
   .hero h1{
-    font-size: clamp(2.2rem, 4.4vw, 3.4rem);
-    font-weight: 700; line-height: 1.06;
+    font-size: clamp(2.4rem, 4.8vw, 3.6rem);
+    font-weight: 700; line-height: 1.08;
+    color: var(--text);
   }
-  .hero h1 span{ color: var(--accent); }
+  .hero h1 span{ color: var(--accent-2); }
+  [data-theme="dark"] .hero h1 span{ color: var(--accent); }
+
   .hero p.lede{
-    margin-top: 20px; font-size: 1.08rem; color: var(--text-muted); max-width: 46ch;
+    margin-top: 20px; font-size: 1.1rem; color: var(--text-muted); max-width: 48ch;
   }
   .hero-actions{ display:flex; gap: 14px; margin-top: 32px; flex-wrap: wrap; }
+  
   .btn{
     display:inline-flex; align-items:center; gap:8px;
-    padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 0.95rem;
+    padding: 12px 22px; border-radius: 8px; font-weight: 600; font-size: 0.95rem;
     text-decoration:none; cursor:pointer; border: 1px solid transparent;
     transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
   }
   .btn:active{ transform: translateY(1px); }
-  .btn-primary{ background: var(--accent); color: #0b0d10; }
-  .btn-primary:hover{ box-shadow: 0 0 0 3px rgba(201,255,62,0.18); }
-  .btn-ghost{ border-color: var(--border); color: var(--text); background: transparent; }
-  .btn-ghost:hover{ border-color: var(--text-muted); }
+  .btn-primary{ background: var(--accent); color: var(--accent-text); }
+  .btn-primary:hover{ box-shadow: 0 0 0 3px rgba(15,118,110,0.18); }
+  [data-theme="dark"] .btn-primary:hover{ box-shadow: 0 0 0 3px rgba(201,255,98,0.22); }
+  
+  .btn-ghost{ border-color: var(--border); color: var(--text); background: var(--surface); }
+  .btn-ghost:hover{ border-color: var(--text-muted); background: var(--surface-2); }
 
   .hero-stats{ display:flex; gap: 32px; margin-top: 40px; }
-  .hero-stats div strong{ display:block; font-family: var(--display); font-size: 1.3rem; }
-  .hero-stats div span{ font-size: 0.8rem; color: var(--text-muted); }
+  .hero-stats div strong{ display:block; font-family: var(--display); font-size: 1.4rem; color: var(--text); }
+  .hero-stats div span{ font-size: 0.82rem; color: var(--text-muted); }
 
-  /* ---------- DEMO VIEWFINDER (signature element) ---------- */
+  /* ---------- DEMO VIEWFINDER ---------- */
   .viewfinder{
     position: relative;
     background: #000;
@@ -142,16 +217,20 @@
     overflow: hidden;
     aspect-ratio: 4/3;
     border: 1px solid var(--border);
-    box-shadow: 0 30px 80px -30px rgba(0,0,0,0.7);
+    box-shadow: 0 20px 50px -15px rgba(0,0,0,0.15);
   }
-  .viewfinder video, .viewfinder canvas{
+  .viewfinder video, .viewfinder img, .viewfinder canvas{
     position:absolute; top:0; left:0; width:100%; height:100%;
     object-fit: cover;
-    transform: scaleX(-1); /* mirror */
   }
-  .viewfinder video{ opacity: 0; }
+  .viewfinder video {
+    transform: scaleX(-1);
+  }
+  .viewfinder img {
+    display: none;
+  }
   .vf-corner{
-    position:absolute; width: 22px; height: 22px; border: 2px solid var(--accent);
+    position:absolute; width: 20px; height: 20px; border: 2px solid var(--accent);
     opacity: 0.85; z-index: 5;
   }
   .vf-corner.tl{ top:10px; left:10px; border-right:none; border-bottom:none; }
@@ -159,151 +238,338 @@
   .vf-corner.bl{ bottom:10px; left:10px; border-right:none; border-top:none; }
   .vf-corner.br{ bottom:10px; right:10px; border-left:none; border-top:none; }
   .vf-hud{
-    position:absolute; top:12px; left:40px; right:40px; z-index:5;
+    position:absolute; top:12px; left:30px; right:30px; z-index:5;
     display:flex; justify-content:space-between; align-items:center;
-    font-family: var(--mono); font-size: 0.68rem; color: var(--accent);
-    letter-spacing: 0.03em;
+    font-family: var(--mono); font-size: 0.72rem; color: var(--accent);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
   }
-  .vf-rec{ display:flex; align-items:center; gap:6px; }
+  .vf-rec{ display:flex; align-items:center; gap:6px; font-weight: 600; }
   .vf-rec-dot{
-    width:7px; height:7px; border-radius:50%; background:#ff4d4d;
+    width:7px; height:7px; border-radius:50%; background:#ef4444;
     animation: blink 1.4s infinite;
   }
   @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:0.25;} }
-  .vf-status{
-    position:absolute; bottom: 12px; left: 40px; right: 40px; z-index: 5;
-    font-family: var(--mono); font-size: 0.7rem; color: rgba(237,237,237,0.85);
-    display:flex; justify-content:space-between;
-  }
+  
   .vf-overlay-msg{
     position:absolute; inset:0; z-index:10;
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;
-    background: rgba(11,13,16,0.88); text-align:center; padding: 24px;
+    background: rgba(15, 23, 42, 0.95); text-align:center; padding: 24px;
+    color: #fff;
   }
-  .vf-overlay-msg p{ color: var(--text-muted); font-size: 0.88rem; max-width: 32ch; }
+  .vf-overlay-msg p{ color: #94a3b8; font-size: 0.85rem; max-width: 32ch; }
   .vf-icon{
-    width:46px; height:46px; border-radius:50%; border:1px solid var(--border);
+    width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,0.15);
     display:flex; align-items:center; justify-content:center; color: var(--accent);
   }
+  .btn-primary-webcam {
+    background: var(--accent);
+    color: var(--accent-text);
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+  .btn-primary-webcam:active {
+    transform: scale(0.98);
+  }
+
   .vf-caption{
     margin-top: 12px; display:flex; justify-content:space-between; align-items:baseline;
     font-family: var(--mono); font-size: 0.75rem; color: var(--text-muted);
   }
   .vf-caption b{ color: var(--text); font-weight: 500; }
 
-  /* ---------- SECTION shell ---------- */
+  /* ---------- TECH STACK STRIP ---------- */
+  .tech-bar {
+    background: var(--surface-2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0;
+  }
+  .tech-bar-wrap {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+  @media (max-width: 600px) {
+    .tech-bar-wrap { gap: 20px; }
+  }
+
+  /* ---------- SECTIONS ---------- */
   section.block{ padding: 80px 0; border-bottom: 1px solid var(--border); }
-  .section-head{ max-width: 640px; margin-bottom: 48px; }
+  .section-head{ max-width: 660px; margin-bottom: 48px; }
   .section-head .eyebrow{ margin-bottom: 16px; }
-  .section-head h2{ font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; }
-  .section-head p{ margin-top: 14px; color: var(--text-muted); font-size: 1rem; }
+  .section-head h2{ font-size: clamp(1.8rem, 3.2vw, 2.4rem); font-weight: 700; color: var(--text); }
+  .section-head p{ margin-top: 14px; color: var(--text-muted); font-size: 1.05rem; }
 
-  /* ---------- GESTURES (numbered - real mapping sequence) ---------- */
-  .gesture-list{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow:hidden; }
-  @media (max-width: 720px){ .gesture-list{ grid-template-columns: 1fr; } }
-  .gesture-item{ background: var(--surface); padding: 26px; display:flex; gap:18px; }
-  .gesture-num{ font-family: var(--mono); color: var(--accent); font-size: 0.85rem; flex-shrink:0; padding-top:2px; }
-  .gesture-body h3{ font-size: 1.02rem; font-weight: 600; margin-bottom: 6px; }
-  .gesture-body p{ color: var(--text-muted); font-size: 0.9rem; }
-  .gesture-tag{
-    display:inline-block; margin-top:10px; font-family: var(--mono); font-size: 0.72rem;
-    color: var(--accent-2); background: rgba(108,99,255,0.1); border: 1px solid rgba(108,99,255,0.25);
-    padding: 3px 8px; border-radius: 5px;
+  /* ---------- EXPLORE CARDS ---------- */
+  .explore-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 28px;
+  }
+  .explore-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .explore-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    box-shadow: 0 10px 20px -5px rgba(0,0,0,0.08);
+  }
+  .card-icon {
+    font-size: 2.2rem;
+    background: var(--surface-2);
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .explore-card h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+  .explore-card p {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    flex: 1;
+  }
+  .explore-card a {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--accent-2);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: gap 0.15s;
+  }
+  [data-theme="dark"] .explore-card a { color: var(--accent); }
+  .explore-card a:hover {
+    gap: 8px;
   }
 
-  /* ---------- INSTALL / TERMINAL ---------- */
-  .terminal{
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-    overflow:hidden;
+  /* ---------- PIPELINE STEPS ---------- */
+  .pipeline-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    max-width: 800px;
+    margin-left: 20px;
   }
-  .terminal-bar{
-    display:flex; align-items:center; gap:8px; padding: 12px 16px;
-    border-bottom: 1px solid var(--border); background: var(--surface-2);
+  .pipeline-timeline::before {
+    content: '';
+    position: absolute;
+    left: 24px;
+    top: 24px;
+    bottom: 24px;
+    width: 2px;
+    background: var(--border);
+    z-index: 1;
   }
-  .terminal-dot{ width:10px; height:10px; border-radius:50%; }
-  .terminal-bar span{ margin-left: 10px; font-family: var(--mono); font-size: 0.78rem; color: var(--text-muted); }
-  .terminal-body{ padding: 22px 24px; }
-  .step-row{ display:flex; gap:16px; padding: 14px 0; border-bottom: 1px solid var(--border); }
-  .step-row:last-child{ border-bottom:none; padding-bottom: 4px; }
-  .step-row:first-child{ padding-top: 4px; }
-  .step-index{ font-family: var(--mono); color: var(--text-muted); font-size: 0.8rem; padding-top: 3px; flex-shrink:0; width: 18px; }
-  .step-content{ flex:1; min-width:0; }
-  .step-label{ font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; }
-  .code-line{
-    display:flex; align-items:center; justify-content:space-between; gap: 12px;
-    background: #0e1013; border: 1px solid var(--border); border-radius: 7px;
-    padding: 11px 14px; font-family: var(--mono); font-size: 0.85rem;
-    overflow-x:auto;
+  .pipeline-step {
+    position: relative;
+    display: flex;
+    gap: 24px;
+    z-index: 2;
+    background: var(--bg);
+    padding: 12px 0;
   }
-  .code-line code{ color: var(--accent); white-space: pre; }
-  .code-line code .dim{ color: var(--text-muted); }
-  .copy-btn{
-    flex-shrink:0; background: transparent; border: 1px solid var(--border); color: var(--text-muted);
-    font-family: var(--body); font-size: 0.72rem; padding: 5px 10px; border-radius: 5px; cursor:pointer;
-    transition: color .15s ease, border-color .15s ease;
+  .step-num {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 6px var(--bg);
   }
-  .copy-btn:hover{ color: var(--text); border-color: var(--text-muted); }
+  .step-info {
+    padding-top: 10px;
+  }
+  .step-info h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .step-info p {
+    margin-top: 6px;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    line-height: 1.5;
+    max-width: 60ch;
+  }
 
-  .req-note{
-    margin-top: 22px; padding: 14px 16px; border-radius: 8px;
-    border: 1px solid rgba(201,255,62,0.25); background: rgba(201,255,62,0.04);
-    font-size: 0.85rem; color: var(--text-muted);
+  /* ---------- BENEFITS GRID ---------- */
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
   }
-  .req-note b{ color: var(--text); }
+  .benefit-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+  .benefit-icon {
+    font-size: 1.8rem;
+    background: var(--surface-2);
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .benefit-card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  .benefit-card p {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
 
-  /* ---------- STACK STRIP ---------- */
-  .stack-strip{ display:flex; flex-wrap:wrap; gap: 12px; margin-top: 28px; }
-  .stack-chip{
-    display:flex; align-items:center; gap:8px;
-    border: 1px solid var(--border); border-radius: 999px; padding: 8px 14px;
-    font-family: var(--mono); font-size: 0.8rem; color: var(--text-muted);
+  /* ---------- BOTTOM SLIDER WIDGET ---------- */
+  .bottom-audio-bar {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #14171c;
+    border: 1px solid #262b31;
+    border-radius: 99px;
+    padding: 8px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 100;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
   }
-  .stack-chip b{ color: var(--text); font-weight:500; }
+  .audio-icon {
+    color: #9098a3;
+    display: flex;
+    align-items: center;
+  }
+  .audio-slider {
+    width: 100px;
+    height: 4px;
+    accent-color: var(--accent);
+    background: #262b31;
+    border-radius: 2px;
+    outline: none;
+  }
+  .audio-val {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: #ededed;
+    min-width: 16px;
+  }
+  
+  .reflex-badge {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #000;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-family: var(--mono);
+    z-index: 100;
+    text-decoration: none;
+    border: 1px solid #222;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+  }
+  .reflex-badge span {
+    color: #a855f7;
+  }
 
   /* ---------- FOOTER ---------- */
-  footer{ padding: 40px 0; }
+  footer{ 
+    padding: 40px 0; 
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
   .footer-row{
     display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap: 16px;
-    color: var(--text-muted); font-size: 0.85rem;
+    color: var(--text-muted); font-size: 0.88rem;
   }
   footer a{ text-decoration:none; color: var(--text-muted); transition: color .15s ease; }
   footer a:hover{ color: var(--accent); }
-
-  ::selection{ background: rgba(201,255,62,0.3); }
-
-  a:focus-visible, button:focus-visible{
-    outline: 2px solid var(--accent); outline-offset: 2px;
-  }
 </style>
 </head>
 <body>
 
 <header>
   <nav>
-    <a href="#top" class="logo"><span class="logo-dot"></span>gesconi</a>
-    <ul class="nav-links nav-mobile-hide">
-      <li><a href="#demo">Demo</a></li>
-      <li><a href="#gestures">Gestures</a></li>
-      <li><a href="#install">Install</a></li>
-    </ul>
-    <a class="nav-cta" href="https://github.com/YOUR_USERNAME/gesconi" target="_blank" rel="noopener">
-      GitHub →
+    <a href="index.html" class="logo">
+      <div class="logo-icon"><div class="logo-icon-v"></div></div>
+      Gescon
     </a>
+    <ul class="nav-links nav-mobile-hide">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="gestures.html">Gestures</a></li>
+      <li><a href="demo.html">Live Demo</a></li>
+      <li><a href="install.html">Install</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="theme-toggle" id="themeToggle">
+        <span id="themeIcon">🌙</span> <span id="themeText">Dark</span>
+      </button>
+      <a class="nav-cta nav-mobile-hide" href="https://github.com/YOUR_USERNAME/gesconi" target="_blank" rel="noopener">
+        GitHub →
+      </a>
+    </div>
   </nav>
 </header>
 
-<main id="top">
-
+<main>
   <!-- HERO -->
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
         <div class="eyebrow">● opencv · mediapipe · pyautogui</div>
         <h1>Move your cursor.<br>With your <span>hand</span>, not your mouse.</h1>
-        <p class="lede">Gesconi tracks your hand through a webcam and translates gestures into cursor movement, clicks, drags, and scrolls — no extra hardware, just Python and a camera.</p>
+        <p class="lede">Gescon tracks your hand through a webcam feed and translates gestures into cursor movement, clicks, and scroll — no mouse required.</p>
         <div class="hero-actions">
-          <a href="#demo" class="btn btn-primary">Try the live demo</a>
-          <a href="#install" class="btn btn-ghost">Install from GitHub</a>
+          <a href="demo.html" class="btn btn-primary">Try the live demo →</a>
+          <a href="install.html" class="btn btn-ghost">Run it locally</a>
         </div>
         <div class="hero-stats">
           <div><strong>21</strong><span>hand landmarks tracked</span></div>
@@ -312,10 +578,13 @@
         </div>
       </div>
 
+      <!-- Hero Viewfinder Mockup / Webcam -->
       <div>
         <div class="viewfinder" id="viewfinder">
-          <video id="input_video" playsinline></video>
-          <canvas id="output_canvas"></canvas>
+          <img id="flaskFeed" src="" alt="Live Hand Recognition Stream">
+          <video id="inputVideo" playsinline></video>
+          <canvas id="outputCanvas"></canvas>
+          
           <div class="vf-corner tl"></div>
           <div class="vf-corner tr"></div>
           <div class="vf-corner bl"></div>
@@ -324,186 +593,153 @@
             <div class="vf-rec"><span class="vf-rec-dot"></span>TRACKING</div>
             <div id="fpsCounter">-- FPS</div>
           </div>
-          <div class="vf-status">
-            <span id="handStatus">no hand detected</span>
-            <span id="gestureStatus">—</span>
-          </div>
-          <div class="vf-overlay-msg" id="vfOverlay">
+          
+          <!-- Webcam Request Overlay -->
+          <div class="vf-overlay-msg" id="vfOverlay" style="display: none;">
             <div class="vf-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M23 19v-3a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M1 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/><circle cx="8" cy="7" r="4"/></svg>
             </div>
-            <p>This runs entirely in your browser via MediaPipe — nothing is uploaded. Enable your camera to see live hand tracking.</p>
-            <button class="btn btn-primary" id="enableCamBtn">Enable camera</button>
+            <p>This runs entirely in your browser via MediaPipe WebAssembly. Enable your camera to preview local model tracking.</p>
+            <button class="btn-primary-webcam" id="enableCamBtn">Enable camera</button>
           </div>
         </div>
         <div class="vf-caption">
-          <span>fig. 1 — <b>in-browser</b> preview of the tracking model</span>
-          <span>the desktop app also drives your OS cursor</span>
+          <span>fig. 1 — <b>interactive</b> skeleton overlay of model output</span>
+          <span>desktop app drives operating system cursor</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- DEMO SECTION ANCHOR (same viewfinder, but give it its own landing target with more context) -->
-  <section class="block" id="demo">
+  <!-- TECH STACK BAR -->
+  <div class="tech-bar">
+    <div class="wrap tech-bar-wrap">
+      <span>Python</span>
+      <span>OpenCV</span>
+      <span>MediaPipe Hands</span>
+      <span>PyAutoGUI</span>
+      <span>NumPy</span>
+    </div>
+  </div>
+
+  <!-- EXPLORE SYSTEMS -->
+  <section class="block">
     <div class="wrap">
       <div class="section-head">
-        <div class="eyebrow">01 · live demo</div>
-        <h2>This is the same model the desktop tool runs.</h2>
-        <p>The viewfinder above uses MediaPipe Hands running directly in your browser, so you can see how the tracking behaves before installing anything. Scroll up, enable your camera, and try moving your hand — the skeleton overlay updates in real time. The installed Python version uses these same landmarks to drive your actual cursor via PyAutoGUI.</p>
+        <div class="eyebrow">+ EXPLORE SYSTEMS</div>
+        <h2>Interact with Gescon.</h2>
+        <p>Explore the gesture mapping database, launch the camera tool directly in your browser, or install the native package for full OS system control.</p>
+      </div>
+
+      <div class="explore-grid">
+        <!-- Card 1 -->
+        <div class="explore-card">
+          <div class="card-icon">👆</div>
+          <h3>Gesture Dictionary</h3>
+          <p>Browse our gesture-to-action database mapping hand landmarks and shapes to cursor, scroll, clicks, screenshots, and typing events.</p>
+          <a href="gestures.html">View gesture map →</a>
+        </div>
+        <!-- Card 2 -->
+        <div class="explore-card">
+          <div class="card-icon">🎯</div>
+          <h3>Live Browser Demo</h3>
+          <p>Test camera recognition inside your browser using MediaPipe WebAssembly. Move a target dot and simulate clicking via real-time pinches.</p>
+          <a href="demo.html">Open camera demo →</a>
+        </div>
+        <!-- Card 3 -->
+        <div class="explore-card">
+          <div class="card-icon">💻</div>
+          <h3>Developer Guide</h3>
+          <p>Run our native app locally to control your operating system mouse cursor. View prerequisites, clone commands, and activate envs.</p>
+          <a href="install.html">Get setup instructions →</a>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- GESTURES -->
-  <section class="block" id="gestures">
+  <!-- TECHNICAL PIPELINE -->
+  <section class="block">
     <div class="wrap">
       <div class="section-head">
-        <div class="eyebrow">02 · gesture map</div>
-        <h2>Five gestures, five actions.</h2>
-        <p>Each gesture is read from the relative position of your fingertips and knuckles — no calibration step required. This is the order Gesconi checks them in.</p>
+        <div class="eyebrow">+ TECHNICAL PIPELINE</div>
+        <h2>How the mapping pipeline works.</h2>
+        <p>A multi-stage pipeline translates physical hand joints into responsive, smooth cursor inputs.</p>
       </div>
-      <div class="gesture-list">
-        <div class="gesture-item">
-          <div class="gesture-num">01</div>
-          <div class="gesture-body">
-            <h3>Open palm, index extended</h3>
-            <p>Moves the cursor. The tip of your index finger maps directly to screen position, smoothed to reduce jitter.</p>
-            <span class="gesture-tag">move</span>
+
+      <div class="pipeline-timeline">
+        <!-- Step 1 -->
+        <div class="pipeline-step">
+          <div class="step-num">01</div>
+          <div class="step-info">
+            <h3>Image Capture</h3>
+            <p>Webcam feeds frame-by-frame images into the processing pipeline at a target rate of 30 frames per second, mirroring the coordinates horizontally for intuitive navigation.</p>
           </div>
         </div>
-        <div class="gesture-item">
-          <div class="gesture-num">02</div>
-          <div class="gesture-body">
-            <h3>Thumb + index pinch</h3>
-            <p>A quick pinch-and-release fires a left click. The distance between thumb and index tips is measured every frame.</p>
-            <span class="gesture-tag">left click</span>
+        <!-- Step 2 -->
+        <div class="pipeline-step">
+          <div class="step-num">02</div>
+          <div class="step-info">
+            <h3>Landmark Localization</h3>
+            <p>MediaPipe parses the hand contours to calculate 21 distinct 3D landmarks (joint coordinates) on a single tracking target with high spatial resolution.</p>
           </div>
         </div>
-        <div class="gesture-item">
-          <div class="gesture-num">03</div>
-          <div class="gesture-body">
-            <h3>Thumb + middle pinch</h3>
-            <p>The same pinch gesture, one finger over, triggers a right click for context menus.</p>
-            <span class="gesture-tag">right click</span>
+        <!-- Step 3 -->
+        <div class="pipeline-step">
+          <div class="step-num">03</div>
+          <div class="step-info">
+            <h3>Normalizing Distances</h3>
+            <p>Angles and fingertip distances are normalized based on hand size (wrist to middle joint distance), rendering controls invariant to camera distance.</p>
           </div>
         </div>
-        <div class="gesture-item">
-          <div class="gesture-num">04</div>
-          <div class="gesture-body">
-            <h3>Pinch and hold</h3>
-            <p>Holding the thumb-index pinch past a short threshold switches into drag mode until you release.</p>
-            <span class="gesture-tag">drag</span>
-          </div>
-        </div>
-        <div class="gesture-item">
-          <div class="gesture-num">05</div>
-          <div class="gesture-body">
-            <h3>Index + middle raised together</h3>
-            <p>Moving two fingers up or down scrolls the active window, similar to a two-finger trackpad swipe.</p>
-            <span class="gesture-tag">scroll</span>
-          </div>
-        </div>
-        <div class="gesture-item">
-          <div class="gesture-num">06</div>
-          <div class="gesture-body">
-            <h3>Closed fist</h3>
-            <p>A closed fist pauses tracking entirely — useful for repositioning your hand without moving the cursor.</p>
-            <span class="gesture-tag">pause</span>
+        <!-- Step 4 -->
+        <div class="pipeline-step">
+          <div class="step-num">04</div>
+          <div class="step-info">
+            <h3>Smoothing &amp; Output Execution</h3>
+            <p>Exponential Moving Average (EMA) filters cursor movements to avoid hand jitter, while OS level commands (click, drag, double-click, screenshot, type) execute via PyAutoGUI.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- INSTALL -->
-  <section class="block" id="install">
+  <!-- SYSTEM BENEFITS -->
+  <section class="block">
     <div class="wrap">
       <div class="section-head">
-        <div class="eyebrow">03 · install</div>
-        <h2>Run it on your own machine.</h2>
-        <p>Gesconi is a Python script — clone it, install the three dependencies, and run it. A webcam is all you need.</p>
+        <div class="eyebrow">+ SYSTEM BENEFITS</div>
+        <h2>Designed for speed &amp; accessibility.</h2>
+        <p>Gescon redefines desktop interaction without the need for expensive or bulky equipment.</p>
       </div>
 
-      <div class="terminal">
-        <div class="terminal-bar">
-          <div class="terminal-dot" style="background:#ff5f57"></div>
-          <div class="terminal-dot" style="background:#febc2e"></div>
-          <div class="terminal-dot" style="background:#28c840"></div>
-          <span>terminal — gesconi setup</span>
+      <div class="benefits-grid">
+        <!-- Benefit 1 -->
+        <div class="benefit-card">
+          <div class="benefit-icon">♿</div>
+          <h3>Accessibility</h3>
+          <p>Provides an ergonomic, hands-free computer control option for users with physical mobility constraints.</p>
         </div>
-        <div class="terminal-body">
-
-          <div class="step-row">
-            <div class="step-index">1</div>
-            <div class="step-content">
-              <div class="step-label">Clone the repository</div>
-              <div class="code-line">
-                <code>git clone <span class="dim">https://github.com/YOUR_USERNAME/gesconi.git</span></code>
-                <button class="copy-btn" data-copy="git clone https://github.com/YOUR_USERNAME/gesconi.git">Copy</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="step-row">
-            <div class="step-index">2</div>
-            <div class="step-content">
-              <div class="step-label">Move into the project and create a virtual environment</div>
-              <div class="code-line">
-                <code>cd gesconi <span class="dim">&&</span> python -m venv venv</code>
-                <button class="copy-btn" data-copy="cd gesconi && python -m venv venv">Copy</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="step-row">
-            <div class="step-index">3</div>
-            <div class="step-content">
-              <div class="step-label">Activate it (Windows shown — use <span class="mono">source venv/bin/activate</span> on macOS/Linux)</div>
-              <div class="code-line">
-                <code>venv\Scripts\activate</code>
-                <button class="copy-btn" data-copy="venv\Scripts\activate">Copy</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="step-row">
-            <div class="step-index">4</div>
-            <div class="step-content">
-              <div class="step-label">Install dependencies</div>
-              <div class="code-line">
-                <code>pip install -r requirements.txt</code>
-                <button class="copy-btn" data-copy="pip install -r requirements.txt">Copy</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="step-row">
-            <div class="step-index">5</div>
-            <div class="step-content">
-              <div class="step-label">Run it</div>
-              <div class="code-line">
-                <code>python gesconi.py</code>
-                <button class="copy-btn" data-copy="python gesconi.py">Copy</button>
-              </div>
-            </div>
-          </div>
-
+        <!-- Benefit 2 -->
+        <div class="benefit-card">
+          <div class="benefit-icon">⚡</div>
+          <h3>Ultra Low Latency</h3>
+          <p>MediaPipe compiles optimized WASM and C++ threads to track hand motion in milliseconds.</p>
         </div>
-      </div>
-
-      <div class="req-note">
-        <b>Before you run it:</b> Gesconi has been tested with <b>Python 3.11</b> and <b>mediapipe==0.10.14</b> — newer Python versions can hit MediaPipe compatibility issues, so the virtual environment step above matters.
-      </div>
-
-      <div class="stack-strip">
-        <div class="stack-chip"><b>OpenCV</b> — camera capture &amp; frame processing</div>
-        <div class="stack-chip"><b>MediaPipe</b> — hand landmark detection</div>
-        <div class="stack-chip"><b>PyAutoGUI</b> — cursor &amp; click control</div>
+        <!-- Benefit 3 -->
+        <div class="benefit-card">
+          <div class="benefit-icon">⚙️</div>
+          <h3>Customizable</h3>
+          <p>Easily adjust threshold limits, map custom fingers configurations, or assign new hotkeys inside local config files.</p>
+        </div>
+        <!-- Benefit 4 -->
+        <div class="benefit-card">
+          <div class="benefit-icon">🎥</div>
+          <h3>Zero Extras</h3>
+          <p>Works on any standard computer webcam — no specialized hardware, infrared cameras, or ring markers required.</p>
+        </div>
       </div>
     </div>
   </section>
-
 </main>
 
 <footer>
@@ -513,82 +749,125 @@
   </div>
 </footer>
 
+<!-- Bottom Aesthetic Slider widget -->
+<div class="bottom-audio-bar">
+  <div class="audio-icon">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+  </div>
+  <input type="range" class="audio-slider" id="audioSlider" min="0" max="100" value="44">
+  <span class="audio-val" id="audioVal">44</span>
+</div>
+
+<a href="https://reflex.dev/" target="_blank" rel="noopener" class="reflex-badge">
+  Built with <span>Reflex</span>
+</a>
+
+<!-- MediaPipe SDKs for in-browser Fallback Mode -->
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
 <script>
-(function(){
-  const videoEl = document.getElementById('input_video');
-  const canvasEl = document.getElementById('output_canvas');
-  const ctx = canvasEl.getContext('2d');
-  const overlay = document.getElementById('vfOverlay');
-  const enableBtn = document.getElementById('enableCamBtn');
-  const handStatus = document.getElementById('handStatus');
-  const gestureStatus = document.getElementById('gestureStatus');
+  // Theme management script
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = document.getElementById('themeIcon');
+  const themeText = document.getElementById('themeText');
+  const htmlEl = document.documentElement;
+
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  htmlEl.setAttribute('data-theme', savedTheme);
+  updateToggleButton(savedTheme);
+
+  themeToggle.addEventListener('click', () => {
+    const currentTheme = htmlEl.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    htmlEl.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateToggleButton(newTheme);
+  });
+
+  function updateToggleButton(theme) {
+    if (theme === 'dark') {
+      themeIcon.textContent = '☀️';
+      themeText.textContent = 'Light';
+    } else {
+      themeIcon.textContent = '🌙';
+      themeText.textContent = 'Dark';
+    }
+  }
+
+  // Audio volume slider mockup interaction
+  const audioSlider = document.getElementById('audioSlider');
+  const audioVal = document.getElementById('audioVal');
+  audioSlider.addEventListener('input', () => {
+    audioVal.textContent = audioSlider.value;
+  });
+</script>
+
+<script>
+  // Dual-mode Viewfinder script
+  const flaskFeed = document.getElementById('flaskFeed');
+  const inputVideo = document.getElementById('inputVideo');
+  const outputCanvas = document.getElementById('outputCanvas');
+  const vfOverlay = document.getElementById('vfOverlay');
+  const enableCamBtn = document.getElementById('enableCamBtn');
   const fpsCounter = document.getElementById('fpsCounter');
 
+  async function checkServerConnection() {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 1200); // 1.2s timeout
+      const res = await fetch('/api/settings', { signal: controller.signal });
+      clearTimeout(timeoutId);
+
+      if (res.ok) {
+        setupPythonMode();
+      } else {
+        setupJSFallbackMode();
+      }
+    } catch (err) {
+      setupJSFallbackMode();
+    }
+  }
+
+  function setupPythonMode() {
+    flaskFeed.src = "/video-feed";
+    flaskFeed.style.display = "block";
+    
+    // Hide JS fallback elements
+    inputVideo.style.display = "none";
+    outputCanvas.style.display = "none";
+    vfOverlay.style.display = "none";
+
+    // Setup simple EventSource to pull FPS values
+    const source = new EventSource('/stream-data');
+    source.onmessage = function(event) {
+      const data = JSON.parse(event.data);
+      fpsCounter.textContent = data.fps + " FPS";
+    };
+    source.onerror = function() {
+      source.close();
+      setupJSFallbackMode();
+    };
+  }
+
+  // JS Fallback logic
   let camera = null;
   let hands = null;
   let lastFrameTime = performance.now();
-  let fpsSmoothed = 0;
+  let fpsSmoothed = 30;
 
-  function dist(a, b){
-    return Math.hypot(a.x - b.x, a.y - b.y);
+  function setupJSFallbackMode() {
+    flaskFeed.style.display = "none";
+    inputVideo.style.display = "block";
+    outputCanvas.style.display = "block";
+    vfOverlay.style.display = "flex";
   }
 
-  function classifyGesture(landmarks){
-    // Very lightweight heuristic classifier, just for demo purposes.
-    const thumbTip = landmarks[4];
-    const indexTip = landmarks[8];
-    const middleTip = landmarks[12];
-    const indexMcp = landmarks[5];
-    const middleMcp = landmarks[9];
-
-    const pinchIndex = dist(thumbTip, indexTip);
-    const pinchMiddle = dist(thumbTip, middleTip);
-
-    if (pinchIndex < 0.05) return 'pinch (click)';
-    if (pinchMiddle < 0.05) return 'pinch (right click)';
-
-    const indexUp = indexTip.y < indexMcp.y - 0.02;
-    const middleUp = middleTip.y < middleMcp.y - 0.02;
-
-    if (indexUp && middleUp) return 'two fingers (scroll)';
-    if (indexUp) return 'index up (move)';
-    return 'fist (paused)';
-  }
-
-  function onResults(results){
-    const now = performance.now();
-    const instantFps = 1000 / (now - lastFrameTime);
-    fpsSmoothed = fpsSmoothed ? fpsSmoothed * 0.9 + instantFps * 0.1 : instantFps;
-    lastFrameTime = now;
-    fpsCounter.textContent = Math.round(fpsSmoothed) + ' FPS';
-
-    canvasEl.width = results.image.width;
-    canvasEl.height = results.image.height;
-    ctx.save();
-    ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
-    ctx.drawImage(results.image, 0, 0, canvasEl.width, canvasEl.height);
-
-    if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0){
-      handStatus.textContent = 'hand detected';
-      for (const landmarks of results.multiHandLandmarks){
-        window.drawConnectors(ctx, landmarks, window.HAND_CONNECTIONS, { color: 'rgba(201,255,62,0.55)', lineWidth: 2 });
-        window.drawLandmarks(ctx, landmarks, { color: '#c9ff3e', fillColor: '#0b0d10', lineWidth: 1, radius: 3 });
-        gestureStatus.textContent = classifyGesture(landmarks);
-      }
-    } else {
-      handStatus.textContent = 'no hand detected';
-      gestureStatus.textContent = '—';
-    }
-    ctx.restore();
-  }
-
-  enableBtn.addEventListener('click', async function(){
-    enableBtn.disabled = true;
-    enableBtn.textContent = 'Requesting camera…';
-    try{
+  enableCamBtn.addEventListener('click', async function() {
+    enableCamBtn.disabled = true;
+    enableCamBtn.textContent = 'Starting Camera...';
+    try {
       hands = new window.Hands({
         locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
       });
@@ -598,34 +877,48 @@
         minDetectionConfidence: 0.6,
         minTrackingConfidence: 0.6
       });
-      hands.onResults(onResults);
+      hands.onResults(onResultsJS);
 
-      camera = new window.Camera(videoEl, {
-        onFrame: async () => { await hands.send({ image: videoEl }); },
+      camera = new window.Camera(inputVideo, {
+        onFrame: async () => { await hands.send({ image: inputVideo }); },
         width: 640,
         height: 480
       });
       await camera.start();
-      overlay.style.display = 'none';
-    } catch (err){
-      enableBtn.disabled = false;
-      enableBtn.textContent = 'Enable camera';
-      handStatus.textContent = 'camera access denied';
+      vfOverlay.style.display = 'none';
+    } catch (err) {
       console.error(err);
+      enableCamBtn.disabled = false;
+      enableCamBtn.textContent = 'Camera Access Denied';
     }
   });
 
-  document.querySelectorAll('.copy-btn').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      const text = btn.getAttribute('data-copy');
-      navigator.clipboard.writeText(text).then(function(){
-        const original = btn.textContent;
-        btn.textContent = 'Copied';
-        setTimeout(function(){ btn.textContent = original; }, 1400);
-      });
-    });
-  });
-})();
+  function onResultsJS(results) {
+    const now = performance.now();
+    const diff = now - lastFrameTime;
+    lastFrameTime = now;
+    if (diff > 0) {
+      fpsSmoothed = fpsSmoothed * 0.9 + (1000 / diff) * 0.1;
+    }
+    fpsCounter.textContent = Math.round(fpsSmoothed) + ' FPS';
+
+    const ctx = outputCanvas.getContext('2d');
+    outputCanvas.width = results.image.width;
+    outputCanvas.height = results.image.height;
+    ctx.save();
+    ctx.clearRect(0, 0, outputCanvas.width, outputCanvas.height);
+    ctx.drawImage(results.image, 0, 0, outputCanvas.width, outputCanvas.height);
+
+    if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0){
+      const landmarks = results.multiHandLandmarks[0];
+      window.drawConnectors(ctx, landmarks, window.HAND_CONNECTIONS, { color: 'rgba(79, 70, 229, 0.5)', lineWidth: 2 });
+      window.drawLandmarks(ctx, landmarks, { color: '#4f46e5', fillColor: '#ffffff', lineWidth: 1, radius: 3 });
+    }
+    ctx.restore();
+  }
+
+  // Check backend server
+  checkServerConnection();
 </script>
 
 </body>
